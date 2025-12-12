@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Word-breaking helpers */
+.hyphens-auto { hyphens: auto; }
+.ow-anywhere { overflow-wrap: anywhere; word-break: normal; }
+/* Prefer moving the entire word to next line; avoid intra-word hyphenation */
+.no-hyphen-break { hyphens: none; word-break: keep-all; overflow-wrap: normal; }
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@keyframes progress {
+    from { width: 0% }
+    to { width: 100% }
+}
+
+@keyframes aurora-blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* Stronger motion for highlighted blob */
+@keyframes aurora-blob-strong {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(60px, -100px) scale(1.12);
+  }
+  50% {
+    transform: translate(-40px, 40px) scale(0.92);
+  }
+  75% {
+    transform: translate(80px, -30px) scale(1.08);
+  }
+}
+
+/* Diagonal travel from top-left to bottom-right */
+@keyframes aurora-diagonal {
+  /* Seamless loop: 0% and 100% are identical */
+  0% {
+    transform: translate(-10%, 0%) scale(0.98);
+    opacity: 0.38;
+  }
+  25% {
+    transform: translate(10%, 8%) scale(1.03);
+    opacity: 0.42;
+  }
+  50% {
+    transform: translate(28%, 26%) scale(1.07);
+    opacity: 0.46;
+  }
+  75% {
+    transform: translate(44%, 40%) scale(1.02);
+    opacity: 0.42;
+  }
+  100% {
+    transform: translate(-10%, 0%) scale(0.98);
+    opacity: 0.38;
+  }
+}
+
+/* Pixel Blast float/scale */
+@keyframes pixel-float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(10px, -14px, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-8px, 14px, 0) scale(0.96);
+  }
+}
+
+/* Star border subtle sliding twinkle */
+@keyframes star-slide {
+  0% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+  50% { background-position: 60% 30%, 40% 80%, 85% 20%; }
+  100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+}
+
+.before\:animate-star-slide::before {
+  animation: star-slide 6s linear infinite;
+}

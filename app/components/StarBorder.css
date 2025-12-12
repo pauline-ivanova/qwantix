@@ -1,0 +1,87 @@
+.star-border-container {
+  display: inline-block;
+  position: relative;
+  border-radius: 20px; /* overridden inline when needed */
+  overflow: hidden;
+}
+
+.border-gradient-bottom {
+  position: absolute;
+  width: 300%;
+  height: 50%;
+  opacity: 0.7;
+  bottom: -12px;
+  right: -250%;
+  border-radius: 50%;
+  animation: star-movement-bottom linear infinite alternate;
+  animation-duration: var(--star-speed, 6s);
+  z-index: 0;
+}
+
+.border-gradient-top {
+  position: absolute;
+  opacity: 0.7;
+  width: 300%;
+  height: 50%;
+  top: -12px;
+  left: -250%;
+  border-radius: 50%;
+  animation: star-movement-top linear infinite alternate;
+  animation-duration: var(--star-speed, 6s);
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .border-gradient-bottom,
+  .border-gradient-top {
+    animation: none !important;
+  }
+}
+
+.inner-content {
+  position: relative;
+  border: 1px solid #222;
+  background: #000; /* overridden via inline style */
+  color: white;
+  font-size: 16px; /* overridden via inline style */
+  text-align: center;
+  padding: 16px 26px;
+  border-radius: 20px; /* overridden inline when needed */
+  z-index: 1;
+  transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease, color 200ms ease;
+}
+
+/* Hover: slightly faster stars and a gentle lift */
+.star-border-container:hover {
+  --star-speed: 4s;
+}
+.star-border-container:hover .border-gradient-bottom,
+.star-border-container:hover .border-gradient-top {
+  opacity: 0.9;
+}
+.star-border-container:hover .inner-content {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
