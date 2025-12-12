@@ -1,6 +1,5 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
-const AuroraBackground = dynamic(() => import('./AuroraBackground'), { ssr: false });
+import AuroraBackground from './AuroraBackground';
 
 interface HeroProps {
   title: string;

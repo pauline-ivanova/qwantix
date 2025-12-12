@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type Post = {
   slug: string;
@@ -15,10 +16,11 @@ const categoryColors: { [key: string]: string } = {
   'Content': 'bg-pink-100 text-pink-800',
 };
 
-const BlogPreview = ({ initialPosts, lang }: { initialPosts: Post[], lang: string }) => {
+const BlogPreview = ({ initialPosts, lang, baseUrl }: { initialPosts: Post[], lang: string, baseUrl?: string }) => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const siteUrl = baseUrl || (typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'));
 
   useEffect(() => {
     setFilteredPosts(initialPosts.slice(0, 3));
@@ -67,7 +69,18 @@ const BlogPreview = ({ initialPosts, lang }: { initialPosts: Post[], lang: strin
                     return (
                         <article key={post.slug} className="flex flex-col items-start self-start">
                             <div className="relative w-full">
-                            <div className="aspect-[16/9] w-full rounded-2xl bg-gray-100 dark:bg-gray-800 sm:aspect-[2/1] lg:aspect-[3/2]"></div>
+                              <Link href={`/${lang}/blog/${post.slug}`}>
+                                <div className="aspect-[16/9] w-full rounded-2xl bg-gray-100 dark:bg-gray-800 sm:aspect-[2/1] lg:aspect-[3/2] overflow-hidden relative">
+                                  <Image
+                                    src={`/api/og/blog/${post.slug}?lang=${lang}`}
+                                    alt={post.title}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    unoptimized
+                                  />
+                                </div>
+                              </Link>
                             </div>
                             <div className="max-w-xl">
                             <div className="mt-8 flex items-center gap-x-4 text-sm">

@@ -14,8 +14,7 @@ interface StatsGridProps {
   showPixelBlast?: boolean;
 }
 
-import dynamic from 'next/dynamic';
-const PixelBlastBackground = dynamic(() => import('@/app/components/blocks/PixelBlastBackground'), { ssr: false });
+import PixelBlastBackground from '@/app/components/blocks/PixelBlastBackground';
 
 const StatsGrid: React.FC<StatsGridProps> = ({ title, description, stats, padding = 'default', background = 'dark', showPixelBlast = false }) => {
   const paddingClasses = padding === 'top-compact'

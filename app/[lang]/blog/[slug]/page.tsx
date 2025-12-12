@@ -5,6 +5,11 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { i18n } from '@/i18n.config';
+import JsonLd, { generateArticleSchema, generateBreadcrumbSchema } from '@/app/components/common/JsonLd';
+import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
+import { Metadata } from 'next';
+import TableOfContents from '@/app/components/blocks/TableOfContents';
+import { parseTableOfContents } from '@/lib/toc-parser';
 
 const postsDirectory = path.join(process.cwd(), 'content', 'blog');
 
@@ -25,13 +30,48 @@ function getPost(lang: string, slug: string) {
   };
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ lang: string, slug: string }> | { lang: string, slug: string } }): Promise<Metadata> {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const { lang, slug } = resolvedParams;
+  const post = getPost(lang, slug);
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+      description: 'The requested blog post could not be found.',
+    };
+  }
 
-export default function PostPage({ params: { lang, slug } }: { params: { lang: string, slug: string } }) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const currentUrl = `${baseUrl}/${lang}/blog/${slug}`;
+  const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/blog/${slug}`);
+  const ogImageUrl = `${baseUrl}/api/og/blog/${slug}?lang=${lang}`;
+
+  return {
+    ...generateStandardMetadata({
+      title: post.frontmatter.title,
+      description: post.frontmatter.excerpt || post.frontmatter.title,
+      url: currentUrl,
+      pagePath: `/${lang}/blog/${slug}`,
+      keywords: [post.frontmatter.category || 'digital marketing', 'SEO', 'blog'],
+      language: lang,
+      alternateLanguages,
+      image: ogImageUrl, // Use dynamic OG image
+    }),
+  };
+}
+
+export default async function PostPage({ params }: { params: Promise<{ lang: string, slug: string }> | { lang: string, slug: string } }) {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const { lang, slug } = resolvedParams;
   const post = getPost(lang, slug);
 
   if (!post) {
     notFound();
   }
+
+  // Parse TOC from content
+  const tocItems = parseTableOfContents(post.content);
 
   return (
     <>
@@ -56,11 +96,42 @@ export default function PostPage({ params: { lang, slug } }: { params: { lang: s
         </div>
       </div>
 
-      <div className="bg-white">
-        <div className="prose prose-lg mx-auto py-16 px-6 lg:px-8">
-          <MDXRemote source={post.content} />
+      <div className="bg-white dark:bg-gray-900">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8 py-16">
+          {/* Table of Contents */}
+          {tocItems.length > 0 && (
+            <TableOfContents items={tocItems} category={post.frontmatter.category || 'SEO'} />
+          )}
+          <div className="prose prose-lg dark:prose-invert max-w-none">
+            <MDXRemote source={post.content} />
+          </div>
         </div>
       </div>
+      {/* JSON-LD Schema */}
+      <JsonLd
+        data={[
+          generateArticleSchema({
+            headline: post.frontmatter.title,
+            description: post.frontmatter.excerpt || post.frontmatter.title,
+            author: {
+              name: 'Qwantix Agency',
+              url: process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com',
+            },
+            datePublished: new Date().toISOString(),
+            dateModified: new Date().toISOString(),
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}/blog/${slug}`,
+            publisher: {
+              name: 'Qwantix Agency',
+              logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/images/qwantix-logo.svg`,
+            },
+          }),
+          generateBreadcrumbSchema([
+            { name: 'Home', url: `/${lang}` },
+            { name: 'Blog', url: `/${lang}/blog` },
+            { name: post.frontmatter.title, url: `/${lang}/blog/${slug}` },
+          ]),
+        ]}
+      />
     </>
   );
 }

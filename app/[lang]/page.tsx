@@ -7,14 +7,15 @@ import StatsGrid from '@/app/components/blocks/StatsGrid';
 import IndustrySolutions from '@/app/components/blocks/IndustrySolutions';
 import ProcessSteps from '@/app/components/blocks/ProcessSteps';
 import CaseStudies from '@/app/components/blocks/CaseStudies';
-import dynamic from 'next/dynamic';
 import BudgetCalculator from '@/app/components/blocks/BudgetCalculator';
 import CTA from '@/app/components/blocks/CTA';
 import FAQ from '@/app/components/blocks/FAQ';
-const BlogPreview = dynamic(() => import('@/app/components/blocks/BlogPreview'), { ssr: false });
+import BlogPreview from '@/app/components/blocks/BlogPreview';
 import ContactUs from '@/app/components/blocks/ContactUs';
 import { getAllPosts } from '@/lib/posts';
-const AuroraSingle = dynamic(() => import('@/app/components/blocks/AuroraSingle'), { ssr: false });
+import AuroraSingle from '@/app/components/blocks/AuroraSingle';
+import JsonLd, { generateOrganizationSchema, generateWebSiteSchema } from '@/app/components/common/JsonLd';
+import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
 import {
   ArrowPathIcon,
   CloudArrowUpIcon,
@@ -34,29 +35,48 @@ import {
 } from '@heroicons/react/24/outline'
 
 
-export async function generateMetadata({ params: { lang } }: { params: { lang: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> | { lang: string } }): Promise<Metadata> {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const lang = resolvedParams.lang;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const currentUrl = `${baseUrl}/${lang}`;
+  
+  let title: string;
+  let description: string;
+  let keywords: string[];
+
   if (lang === 'es') {
-    return {
-      title: 'Qwantix: Marketing digital impulsado por analítica',
-      description: 'Haz crecer tu negocio con marketing digital basado en datos: SEO, PPC y contenido para maximizar el ROI.'
-    };
-  }
-  if (lang === 'de') {
-    return {
-      title: 'Qwantix: Digital Marketing – datengetrieben',
-      description: 'Wachstum mit datengetriebenem Online‑Marketing: SEO, PPC & Content für maximalen ROI.'
-    };
-  }
-  if (lang === 'ru') {
+    title = 'Qwantix: Marketing digital impulsado por analítica';
+    description = 'Haz crecer tu negocio con marketing digital basado en datos: SEO, PPC y contenido para maximizar el ROI.';
+    keywords = ['marketing digital', 'SEO', 'PPC', 'publicidad online', 'marketing en redes sociales', 'content marketing', 'analítica web'];
+  } else if (lang === 'de') {
+    title = 'Qwantix: Digital Marketing – datengetrieben';
+    description = 'Wachstum mit datengetriebenem Online‑Marketing: SEO, PPC & Content für maximalen ROI.';
+    keywords = ['Digital Marketing', 'SEO', 'PPC', 'Online-Werbung', 'Social Media Marketing', 'Content Marketing', 'Web-Analyse'];
+  } else if (lang === 'ru') {
     const dict: any = await getDictionary('ru' as any);
-    return {
-      title: dict?.home?.meta?.title ?? 'Qwantix: цифровой маркетинг на основе аналитики',
-      description: dict?.home?.meta?.description ?? 'Рост бизнеса с digital‑маркетингом на основе данных: SEO, PPC и контент для максимального ROI.'
-    };
+    title = dict?.home?.meta?.title ?? 'Qwantix: цифровой маркетинг на основе аналитики';
+    description = dict?.home?.meta?.description ?? 'Рост бизнеса с digital‑маркетингом на основе данных: SEO, PPC и контент для максимального ROI.';
+    keywords = ['цифровой маркетинг', 'SEO', 'PPC', 'онлайн-реклама', 'маркетинг в соцсетях', 'контент-маркетинг', 'веб-аналитика'];
+  } else {
+    title = 'Qwantix: Digital Marketing Powered by Analytics';
+    description = 'Grow your business with analytics‑powered SEO, PPC & content strategies to maximize your online ROI.';
+    keywords = ['digital marketing', 'SEO', 'PPC', 'online advertising', 'social media marketing', 'content marketing', 'web analytics'];
   }
+
+  const alternateLanguages = generateAlternateLanguages(lang, `/${lang}`);
+
   return {
-    title: 'Qwantix: Digital Marketing Powered by Analytics',
-    description: 'Grow your business with analytics‑powered SEO, PPC & content strategies to maximize your online ROI.'
+    ...generateStandardMetadata({
+      title,
+      description,
+      url: currentUrl,
+      pagePath: `/${lang}`,
+      keywords,
+      language: lang,
+      alternateLanguages,
+      image: '/images/og-image.jpg',
+    }),
   };
 }
 
@@ -238,7 +258,9 @@ const faqsRu = [
 ]
 
 
-export default async function Home({ params: { lang } }: { params: { lang: string } }) {
+export default async function Home({ params }: { params: Promise<{ lang: string }> | { lang: string } }) {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const lang = resolvedParams.lang;
 
   const allPosts = getAllPosts(lang);
   const dict: any = await getDictionary(lang as any);
@@ -628,11 +650,67 @@ export default async function Home({ params: { lang } }: { params: { lang: strin
         />
       </section>
       <section id="blog-preview" style={{ contentVisibility: 'auto' }}>
-        <BlogPreview initialPosts={allPosts} lang={lang} />
+        <BlogPreview initialPosts={allPosts} lang={lang} baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'} />
       </section>
       <section id="contact-us" style={{ contentVisibility: 'auto' }}>
         <ContactUs lang={lang} />
       </section>
+      {/* JSON-LD Schema */}
+      <JsonLd
+        data={[
+          generateOrganizationSchema({
+            name: 'Qwantix Agency',
+            url: process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com',
+            description: isEs 
+              ? 'Agencia de marketing digital impulsada por analítica. Transformamos tu presencia online generando crecimiento medible y maximizando tu ROI digital.'
+              : isDe
+              ? 'Digital Marketing Agentur, datengetrieben. Wir transformieren Ihre Online-Präsenz, treiben messbares Wachstum voran und maximieren Ihren digitalen ROI.'
+              : isRu
+              ? 'Цифровое маркетинговое агентство на основе аналитики. Трансформируем ваше онлайн-присутствие, обеспечивая измеримый рост и максимальный цифровой ROI.'
+              : 'Digital Marketing Agency Powered by Analytics. We transform your online presence, driving measurable growth and maximizing your digital ROI.',
+            contactPoint: {
+              contactType: 'Customer Service',
+              email: 'info@qwantix.com',
+            },
+            slogan: isEs 
+              ? 'Marketing digital impulsado por analítica'
+              : isDe
+              ? 'Digital Marketing – datengetrieben'
+              : isRu
+              ? 'Цифровой маркетинг на основе аналитики'
+              : 'Digital Marketing Powered by Analytics',
+            knowsAbout: [
+              'SEO',
+              'PPC Advertising',
+              'Social Media Marketing',
+              'Content Creation',
+              'Technical SEO',
+              'Local SEO',
+              'Digital Marketing Analytics',
+              'Search Engine Optimization',
+            ],
+          }),
+          generateWebSiteSchema({
+            name: 'Qwantix Agency',
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}`,
+            description: isEs 
+              ? 'Agencia de marketing digital impulsada por analítica'
+              : isDe
+              ? 'Digital Marketing Agentur, datengetrieben'
+              : isRu
+              ? 'Цифровое маркетинговое агентство на основе аналитики'
+              : 'Digital Marketing Agency Powered by Analytics',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}/?s={search_term_string}`,
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          }),
+        ]}
+      />
       {/* Other sections will go here */}
     </>
   );

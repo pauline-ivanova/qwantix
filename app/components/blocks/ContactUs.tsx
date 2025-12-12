@@ -14,6 +14,7 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
     message: '',
   });
 
+  const [privacyConsent, setPrivacyConsent] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validate = () => {
@@ -26,6 +27,9 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
     }
     if (!formData.phoneNumber) newErrors.phoneNumber = isEs ? 'Por favor, introduce tu teléfono.' : isDe ? 'Bitte geben Sie Ihre Telefonnummer ein.' : isRu ? 'Пожалуйста, укажите телефон.' : 'Please enter your phone number.';
     if (!formData.message) newErrors.message = isEs ? 'Por favor, escribe tu mensaje.' : isDe ? 'Bitte schreiben Sie Ihre Nachricht.' : isRu ? 'Пожалуйста, напишите сообщение.' : 'Please enter your message.';
+    if (!privacyConsent) {
+      newErrors.privacy = isEs ? 'Debes aceptar la política de privacidad para continuar.' : isDe ? 'Sie müssen der Datenschutzerklärung zustimmen, um fortzufahren.' : isRu ? 'Необходимо принять политику конфиденциальности для продолжения.' : 'You must accept the privacy policy to continue.';
+    }
     return newErrors;
   };
 
@@ -49,6 +53,7 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
       // Here you would typically send the data to a server
       alert(isEs ? '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.' : isDe ? 'Vielen Dank für Ihre Nachricht! Wir melden uns in Kürze.' : isRu ? 'Спасибо! Мы свяжемся с вами в ближайшее время.' : 'Thank you for your message! We will get back to you shortly.');
       setFormData({ name: '', company: '', email: '', phoneNumber: '', message: '' });
+      setPrivacyConsent(false);
       setErrors({});
     }
   };
@@ -162,6 +167,46 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
                   } focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6`}
                 />
                 {errors.message && <p className="mt-2 text-sm text-red-500">{errors.message}</p>}
+              </div>
+            </div>
+          </div>
+          <div className="mt-6">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="privacy-consent"
+                name="privacy-consent"
+                required
+                checked={privacyConsent}
+                onChange={(e) => {
+                  setPrivacyConsent(e.target.checked);
+                  if (errors.privacy) {
+                    const newErrors = { ...errors };
+                    delete newErrors.privacy;
+                    setErrors(newErrors);
+                  }
+                }}
+                className={`mt-1 h-4 w-4 text-indigo-600 rounded focus:ring-indigo-500 ${
+                  errors.privacy ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
+              <div className="flex-1">
+                <label htmlFor="privacy-consent" className="text-sm text-gray-300">
+                  {isEs ? 'He leído y acepto la' : isDe ? 'Ich habe die' : isRu ? 'Я прочитал(а) и принимаю' : 'I have read and accept the'}{' '}
+                  <a 
+                    href={`/${lang}/privacy`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-400 hover:text-indigo-300 underline font-medium"
+                  >
+                    {isEs ? 'Política de Privacidad' : isDe ? 'Datenschutzerklärung' : isRu ? 'Политику конфиденциальности' : 'Privacy Policy'}
+                  </a>
+                  {' '}{isEs ? 'y doy mi consentimiento para el tratamiento de mis datos personales según lo establecido en el Reglamento General de Protección de Datos (RGPD).' : isDe ? 'gelesen und akzeptiert und stimme der Verarbeitung meiner persönlichen Daten gemäß der Datenschutz-Grundverordnung (DSGVO) zu.' : isRu ? 'и даю согласие на обработку моих персональных данных в соответствии с Общим регламентом по защите данных (GDPR).' : 'and give my consent for the processing of my personal data as set out in the General Data Protection Regulation (GDPR).'}{' '}
+                  <span className="text-red-400">*</span>
+                </label>
+                {errors.privacy && (
+                  <p className="mt-1 text-sm text-red-400">{errors.privacy}</p>
+                )}
               </div>
             </div>
           </div>

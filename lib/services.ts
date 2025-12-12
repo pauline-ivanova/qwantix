@@ -80,6 +80,7 @@ export type ServiceData = {
   frontmatter: { [key: string]: any };
   contentBlocks: ServiceContentBlock[];
   faqData: null | { title: string; description: string; faqs: { question: string; answer: string; category: string }[] };
+  rawContent?: string; // Qwantix: raw MDX content for TOC parsing
 };
 
 export async function getServiceData(lang: string, slug: string): Promise<ServiceData> {
@@ -287,6 +288,7 @@ export async function getServiceData(lang: string, slug: string): Promise<Servic
   return {
     slug,
     frontmatter: data,
+    rawContent: content, // Qwantix: include raw content for TOC parsing
     ...parsedData
   } as ServiceData;
 }

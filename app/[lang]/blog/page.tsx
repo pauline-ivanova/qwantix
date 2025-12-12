@@ -1,5 +1,6 @@
 import { getAllPosts } from '@/lib/posts';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const categoryColors: { [key: string]: string } = {
   'SEO': 'bg-indigo-100 text-indigo-800',
@@ -7,8 +8,11 @@ const categoryColors: { [key: string]: string } = {
   'Content': 'bg-pink-100 text-pink-800',
 };
 
-export default function BlogPage({ params: { lang } }: { params: { lang: string } }) {
+export default async function BlogPage({ params }: { params: Promise<{ lang: string }> | { lang: string } }) {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const lang = resolvedParams.lang;
   const allPosts = getAllPosts(lang);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
 
   return (
     <>
@@ -41,7 +45,18 @@ export default function BlogPage({ params: { lang } }: { params: { lang: string 
               return (
                 <article key={post.slug} className="flex flex-col items-start self-start">
                   <div className="relative w-full">
-                    <div className="aspect-[16/9] w-full rounded-2xl bg-gray-100 sm:aspect-[2/1] lg:aspect-[3/2]"></div>
+                    <Link href={`/${lang}/blog/${post.slug}`}>
+                      <div className="aspect-[16/9] w-full rounded-2xl bg-gray-100 sm:aspect-[2/1] lg:aspect-[3/2] overflow-hidden relative">
+                        <Image
+                          src={`/api/og/blog/${post.slug}?lang=${lang}`}
+                          alt={post.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          unoptimized
+                        />
+                      </div>
+                    </Link>
                   </div>
                   <div className="max-w-xl">
                     <div className="mt-8 flex items-center gap-x-4 text-sm">

@@ -1,6 +1,5 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
-const AuroraBackground = dynamic(() => import('../blocks/AuroraBackground'), { ssr: false });
+import AuroraBackground from '../blocks/AuroraBackground';
 
 interface ServicePageLayoutProps {
   title: string;

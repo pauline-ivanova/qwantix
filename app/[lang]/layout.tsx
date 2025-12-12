@@ -8,6 +8,7 @@ import DotNav from "@/app/components/common/DotNav";
 import ScrollProgressBar from "@/app/components/common/ScrollProgressBar";
 import { ThemeWrapper } from "@/app/components/ThemeWrapper";
 import { Metadata } from "next";
+import DeferredComponents from "@/app/components/layout/DeferredComponents";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,19 +21,23 @@ export const metadata: Metadata = {
   description: "Grow your business with digital marketing powered by analytics",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: Locale };
+  params: Promise<{ lang: string }> | { lang: string };
 }) {
+  // Handle params as Promise in Next.js 16
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const lang = i18n.locales.includes(resolvedParams.lang as Locale) ? (resolvedParams.lang as Locale) : i18n.defaultLocale;
+
   return (
-    <html lang={params.lang}>
+    <html lang={lang}>
       <head>
         <link rel="preconnect" href="https://placehold.co" crossOrigin="anonymous" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ThemeWrapper>
           <ScrollProgressBar />
           <Header />
@@ -42,6 +47,8 @@ export default function RootLayout({
           </main>
           <Footer />
           <ScrollToTopButton />
+          {/* Defer non-critical components to reduce TBT */}
+          <DeferredComponents />
         </ThemeWrapper>
       </body>
     </html>

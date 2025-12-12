@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { i18n } from '@/i18n.config';
+import { openCookieSettings } from '@/lib/cookie-utils';
 
 const navBase = {
   services: [
@@ -19,8 +20,8 @@ const navBase = {
     { name: 'Contact', nameEs: 'Contacto', nameDe: 'Kontakt', nameRu: 'Контакты', anchor: '#contact-us' },
   ],
   legal: [
-    { name: 'Privacy Policy', nameEs: 'Política de privacidad', nameDe: 'Datenschutz', nameRu: 'Политика конфиденциальности', href: '#' },
-    { name: 'Terms of Service', nameEs: 'Términos del servicio', nameDe: 'Nutzungsbedingungen', nameRu: 'Условия использования', href: '#' },
+    { name: 'Privacy Policy', nameEs: 'Política de privacidad', nameDe: 'Datenschutz', nameRu: 'Политика конфиденциальности', path: '/privacy' },
+    { name: 'Cookie Policy', nameEs: 'Política de cookies', nameDe: 'Cookie-Richtlinie', nameRu: 'Политика использования файлов cookie', path: '/cookies' },
   ],
 };
 
@@ -51,26 +52,6 @@ const social = [
                 <path
                 fillRule="evenodd"
                 d="M12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zM12 15a3 3 0 110-6 3 3 0 010 6z"
-                clipRule="evenodd"
-                />
-                 <path d="M16.95 6.405a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5z" />
-            </svg>
-        ),
-    },
-    {
-        name: 'Instagram',
-        href: '#',
-        icon: (props: React.SVGProps<SVGSVGElement>) => (
-            <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                <path
-                fillRule="evenodd"
-                d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 012.153 2.153c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 3.808s-.012 2.74-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-2.153 2.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-3.808.06s-2.74-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-2.153-2.153c-.247-.636-.416-1.363-.465-2.427-.048-1.067-.06-1.407-.06-3.808s.012-2.74.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 012.153-2.153c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 0C9.58 0 9.22.01 8.134.059 7.05.108 6.223.284 5.514.549a6.907 6.907 0 00-3.041 3.041c-.265.71-.437 1.537-.486 2.622C2.01 9.22 2 9.58 2 12s.01 2.78.059 3.866c.049 1.085.221 1.912.486 2.622a6.907 6.907 0 003.041 3.041c.71.265 1.537.437 2.622.486C9.22 21.99 9.58 22 12 22s2.78-.01 3.866-.059c1.085-.049 1.912-.221 2.622-.486a6.907 6.907 0 003.041-3.041c.265-.71.437-1.537.486-2.622C21.99 14.78 22 14.42 22 12s-.01-2.78-.059-3.866c-.049-1.085-.221-1.912-.486-2.622a6.907 6.907 0 00-3.041-3.041c-.71-.265-1.537-.437-2.622-.486C14.78 2.01 14.42 2 12 2z"
-                clipRule="evenodd"
-                />
-                <path
-                fillRule="evenodd"
-                d="M12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zM12 15a3 3 0 110-6 3 3 0 010 6z"
-                clipRule="evenodd"
                 />
                  <path d="M16.95 6.405a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5z" />
             </svg>
@@ -124,7 +105,10 @@ export default function Footer() {
       }
       return { name: isEs ? (c as any).nameEs : isDe ? (c as any).nameDe : isRu ? (c as any).nameRu : c.name, href: '#' }
     }),
-    legal: navBase.legal.map(l => ({ name: isEs ? (l as any).nameEs : isDe ? (l as any).nameDe : isRu ? (l as any).nameRu : l.name, href: (l as any).href }))
+    legal: navBase.legal.map(l => ({ 
+      name: isEs ? (l as any).nameEs : isDe ? (l as any).nameDe : isRu ? (l as any).nameRu : l.name, 
+      href: `/${detectedLang}${(l as any).path || '#'}` 
+    }))
   };
   return (
     <footer className="bg-gray-900" aria-labelledby="footer-heading">
@@ -147,8 +131,8 @@ export default function Footer() {
               {isEs ? 'Marketing digital impulsado por analítica. Transformamos tu presencia online generando crecimiento medible y maximizando tu ROI.' : isDe ? 'Digital Marketing Powered by Analytics. We transform your online presence, driving measurable growth and maximizing your digital ROI.' : isRu ? 'Цифровой маркетинг на основе аналитики. Трансформируем ваше онлайн‑присутствие, обеспечивая измеримый рост и максимальный ROI.' : 'Digital Marketing Powered by Analytics. We transform your online presence, driving measurable growth and maximizing your digital ROI.'}
             </p>
             <div className="flex space-x-6">
-              {social.map((item) => (
-                <a key={item.name} href={item.href} className="text-gray-500 hover:text-gray-400">
+              {social.map((item, index) => (
+                <a key={`${item.name}-${index}`} href={item.href} className="text-gray-500 hover:text-gray-400">
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-6 w-6" aria-hidden="true" />
                 </a>
@@ -188,11 +172,19 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                      <Link href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
+                  <li>
+                    <button
+                      onClick={openCookieSettings}
+                      className="text-sm leading-6 text-gray-300 hover:text-white text-left"
+                    >
+                      {isEs ? 'Gestionar Cookies' : isDe ? 'Cookies verwalten' : isRu ? 'Управление файлами cookie' : 'Manage Cookies'}
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
