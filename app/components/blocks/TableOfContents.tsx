@@ -112,9 +112,9 @@ export default function TableOfContents({ items, category = 'SEO' }: TableOfCont
             <div className={`flex items-center justify-center p-2 rounded-lg ${colors.bg} ${colors.textAccent}`}>
               <ListBulletIcon className="h-5 w-5" />
             </div>
-            <h3 className={`text-lg font-bold ${colors.text} m-0`} suppressHydrationWarning>
+            <div className={`text-lg font-bold ${colors.text} m-0`} role="heading" aria-level={2} suppressHydrationWarning>
               {tocTitle}
-            </h3>
+            </div>
           </div>
           <div className={`flex-shrink-0 ${colors.textAccent} ml-4`}>
             {isExpanded ? (
