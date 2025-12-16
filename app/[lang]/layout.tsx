@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import "../globals.css";
 import { i18n, Locale } from "@/i18n.config";
 import Header from "@/app/components/layout/Header";
@@ -9,8 +8,6 @@ import ScrollProgressBar from "@/app/components/common/ScrollProgressBar";
 import { ThemeWrapper } from "@/app/components/ThemeWrapper";
 import { Metadata } from "next";
 import DeferredComponents from "@/app/components/layout/DeferredComponents";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
@@ -33,24 +30,17 @@ export default async function RootLayout({
   const lang = i18n.locales.includes(resolvedParams.lang as Locale) ? (resolvedParams.lang as Locale) : i18n.defaultLocale;
 
   return (
-    <html lang={lang}>
-      <head>
-        <link rel="preconnect" href="https://placehold.co" crossOrigin="anonymous" />
-      </head>
-      <body className={inter.className} suppressHydrationWarning>
-        <ThemeWrapper>
-          <ScrollProgressBar />
-          <Header />
-          <DotNav />
-          <main className="bg-white dark:bg-gray-900">
-            {children}
-          </main>
-          <Footer />
-          <ScrollToTopButton />
-          {/* Defer non-critical components to reduce TBT */}
-          <DeferredComponents />
-        </ThemeWrapper>
-      </body>
-    </html>
+    <ThemeWrapper>
+      <ScrollProgressBar />
+      <Header />
+      <DotNav />
+      <main className="bg-white dark:bg-gray-900">
+        {children}
+      </main>
+      <Footer />
+      <ScrollToTopButton />
+      {/* Defer non-critical components to reduce TBT */}
+      <DeferredComponents />
+    </ThemeWrapper>
   );
 }

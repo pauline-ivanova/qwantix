@@ -26,7 +26,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ title, description, steps, 
         <div className={`bg-gray-50 dark:bg-gray-900 ${paddingClasses}`}>
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl lg:text-center">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">{title}</h2>
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl" suppressHydrationWarning>{title}</h2>
                     <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
                         {description}
                     </p>
@@ -43,7 +43,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ title, description, steps, 
                                                 <Icon className="h-6 w-6 text-white" aria-hidden="true" />
                                             </div>
                                         )}
-                                        <h3 className="text-lg">{step.name}</h3>
+                                        <h3 className="text-lg" suppressHydrationWarning>{step.name}</h3>
                                     </dt>
                                     <dd className={`mt-2 text-base leading-7 text-gray-600 dark:text-gray-300 ${!Icon ? 'ml-4 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}>{step.description}</dd>
                                 </div>

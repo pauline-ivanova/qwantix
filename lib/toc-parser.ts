@@ -5,8 +5,21 @@ export interface TocItem {
   level: number; // 2 for H2, 3 for H3, 4 for H4
 }
 
+/**
+ * Generate a slug ID from text (used for both TOC and heading IDs)
+ */
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim();
+}
+
 export function parseTableOfContents(content: string): TocItem[] {
   const toc: TocItem[] = [];
+  const idCounts: { [key: string]: number } = {}; // Track ID occurrences
   
   // Regular expression to match markdown headings (## H2, ### H3, #### H4)
   // This pattern matches headings with 2-4 hash symbols
@@ -25,13 +38,17 @@ export function parseTableOfContents(content: string): TocItem[] {
       continue;
     }
     
-    // Generate ID from text (slugify)
-    const id = text
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-      .trim();
+    // Generate base ID from text (slugify)
+    let baseId = slugify(text);
+    
+    // Ensure unique ID by appending a counter if needed
+    let id = baseId;
+    if (idCounts[baseId] !== undefined) {
+      idCounts[baseId]++;
+      id = `${baseId}-${idCounts[baseId]}`;
+    } else {
+      idCounts[baseId] = 0;
+    }
     
     toc.push({
       id,

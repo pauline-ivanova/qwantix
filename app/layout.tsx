@@ -15,8 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://placehold.co" crossOrigin="anonymous" />
+      </head>
+      <body className={inter.className} suppressHydrationWarning>
         {children}
       </body>
     </html>

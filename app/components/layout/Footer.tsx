@@ -112,7 +112,7 @@ export default function Footer() {
   };
   return (
     <footer className="bg-gray-900" aria-labelledby="footer-heading">
-      <h2 id="footer-heading" className="sr-only">
+      <h2 id="footer-heading" className="sr-only" suppressHydrationWarning>
         Footer
       </h2>
       <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
@@ -142,7 +142,7 @@ export default function Footer() {
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-white">{isEs ? 'Servicios' : isDe ? 'Services' : isRu ? 'Услуги' : 'Services'}</h3>
+                <h3 className="text-sm font-semibold leading-6 text-white" suppressHydrationWarning>{isEs ? 'Servicios' : isDe ? 'Services' : isRu ? 'Услуги' : 'Services'}</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.services.map((item) => (
                     <li key={item.name}>
@@ -154,7 +154,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-white">{isEs ? 'Empresa' : isDe ? 'Company' : isRu ? 'Компания' : 'Company'}</h3>
+                <h3 className="text-sm font-semibold leading-6 text-white" suppressHydrationWarning>{isEs ? 'Empresa' : isDe ? 'Company' : isRu ? 'Компания' : 'Company'}</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.company.map((item) => (
                     <li key={item.name}>
@@ -168,7 +168,7 @@ export default function Footer() {
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-white">{isEs ? 'Legal' : isDe ? 'Legal' : isRu ? 'Правовая информация' : 'Legal'}</h3>
+                <h3 className="text-sm font-semibold leading-6 text-white" suppressHydrationWarning>{isEs ? 'Legal' : isDe ? 'Legal' : isRu ? 'Правовая информация' : 'Legal'}</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>

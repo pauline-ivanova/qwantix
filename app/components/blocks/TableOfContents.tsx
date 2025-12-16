@@ -52,11 +52,13 @@ export default function TableOfContents({ items, category = 'SEO' }: TableOfCont
     }
   };
 
-  const renderTocItem = (item: TocItem) => {
+  const renderTocItem = (item: TocItem, index: number) => {
     const isH2 = item.level === 2;
+    // Use combination of index and id to ensure unique keys
+    const uniqueKey = `${item.id}-${index}`;
     
     return (
-      <li key={item.id} className="group">
+      <li key={uniqueKey} className="group">
         <a
           href={`#${item.id}`}
           onClick={(e) => scrollToHeading(item.id, e)}
@@ -110,7 +112,7 @@ export default function TableOfContents({ items, category = 'SEO' }: TableOfCont
             <div className={`flex items-center justify-center p-2 rounded-lg ${colors.bg} ${colors.textAccent}`}>
               <ListBulletIcon className="h-5 w-5" />
             </div>
-            <h3 className={`text-lg font-bold ${colors.text} m-0`}>
+            <h3 className={`text-lg font-bold ${colors.text} m-0`} suppressHydrationWarning>
               {tocTitle}
             </h3>
           </div>
@@ -131,7 +133,7 @@ export default function TableOfContents({ items, category = 'SEO' }: TableOfCont
         >
           <nav className="px-5 pb-6" aria-label={tocTitle}>
             <ul className="space-y-1 list-none p-0 m-0">
-              {items.map(renderTocItem)}
+              {items.map((item, index) => renderTocItem(item, index))}
             </ul>
           </nav>
         </div>

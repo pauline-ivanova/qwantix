@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { i18n } from '@/i18n.config';
 
@@ -23,12 +23,26 @@ export default function DotNav() {
     const first = pathname?.split('/')[1] || ''
     return i18n.locales.includes(first as any) ? first : i18n.defaultLocale
   })();
+  
+  // Hide DotNav on blog pages (they have TableOfContents instead)
+  const isBlogPage = pathname?.includes('/blog') || false;
+
   const isEs = detectedLang === 'es';
   const isDe = detectedLang === 'de';
   const isRu = detectedLang === 'ru';
-  const sections = sectionsBase.map(s => ({ id: s.id, title: isEs ? (s as any).titleEs : isDe ? (s as any).titleDe : isRu ? (s as any).titleRu : s.title }));
+  const sections = useMemo(() => 
+    sectionsBase.map(s => ({ 
+      id: s.id, 
+      title: isEs ? (s as any).titleEs : isDe ? (s as any).titleDe : isRu ? (s as any).titleRu : s.title 
+    })), 
+    [isEs, isDe, isRu]
+  );
 
   useEffect(() => {
+    // Early return if blog page - don't set up observer
+    if (isBlogPage) {
+      return;
+    }
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -55,7 +69,7 @@ export default function DotNav() {
         }
       });
     };
-  }, []);
+  }, [isBlogPage, sections]);
 
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -82,6 +96,11 @@ export default function DotNav() {
   };
 
   const visibleSections = getVisibleSections();
+
+  // Don't render on blog pages
+  if (isBlogPage) {
+    return null;
+  }
 
   return (
     <nav className="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden lg:block">

@@ -33,7 +33,7 @@ export default function FAQ({ title, description, faqs, ctaText, ctaButtonText, 
         <div className={`${bgClass} py-24 sm:py-32`}>
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">{title}</h2>
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl" suppressHydrationWarning>{title}</h2>
                     <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
                         {description}
                     </p>
@@ -68,7 +68,7 @@ export default function FAQ({ title, description, faqs, ctaText, ctaButtonText, 
                                         .filter(faq => faq.category === category)
                                         .map((faq, index) => (
                                             <div key={faq.question} className="py-6">
-                                                <h3 className="text-base font-semibold leading-7">
+                                                <h3 className="text-base font-semibold leading-7" suppressHydrationWarning>
                                                     <button
                                                         onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
                                                         className="flex w-full items-start justify-between text-left text-gray-900 dark:text-white group"

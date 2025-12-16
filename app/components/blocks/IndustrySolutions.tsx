@@ -196,7 +196,7 @@ export default function IndustrySolutions({ lang = 'en' }: { lang?: string }) {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <p className="text-base font-semibold leading-7 text-indigo-600 dark:text-indigo-200">{isEs ? 'Soluciones por industria' : isDe ? 'Lösungen nach Branche' : isRu ? (ru?.eyebrow ?? 'Решения по отраслям') : 'Industry Solutions'}</p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl no-hyphen-break">
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl no-hyphen-break" suppressHydrationWarning>
             {isEs ? 'Soluciones digitales a medida para cada sector' : isDe ? 'Maßgeschneiderte digitale Lösungen für jede Branche' : isRu ? (ru?.title ?? 'Цифровые решения под задачи каждой отрасли') : 'Tailored Digital Solutions Across Industries'}
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-100">
@@ -209,7 +209,7 @@ export default function IndustrySolutions({ lang = 'en' }: { lang?: string }) {
               <div key={industry.name} className="flex flex-col">
                   <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
                       <industry.icon className="h-8 w-8 flex-none text-indigo-600 dark:text-indigo-200" aria-hidden="true" />
-                      <h3>{industry.name}</h3>
+                      <h3 suppressHydrationWarning>{industry.name}</h3>
                   </dt>
                   <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-100">
                       <p className="flex-auto">{industry.description}</p>

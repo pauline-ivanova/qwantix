@@ -158,7 +158,7 @@ export default function BudgetCalculator({ lang }: { lang: string }) {
     <div className="bg-gray-50 dark:bg-gray-900 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl no-hyphen-break">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl no-hyphen-break" suppressHydrationWarning>
             {isEs ? 'Calculadora de presupuesto de marketing digital' : isDe ? 'Budget‑Rechner für Digitales Marketing' : isRu ? 'Калькулятор бюджета на цифровой маркетинг' : 'Digital Marketing Budget Calculator'}
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
@@ -169,7 +169,7 @@ export default function BudgetCalculator({ lang }: { lang: string }) {
           {/* Main Sliders */}
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 dark:border-gray-700/20 pb-10 md:grid-cols-2">
             <div>
-              <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white">{isEs ? '1. Define tu presupuesto total' : isDe ? '1. Setzen Sie Ihr Gesamtbudget' : isRu ? '1. Задайте общий бюджет' : '1. Set Your Total Budget'}</h3>
+              <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white" suppressHydrationWarning>{isEs ? '1. Define tu presupuesto total' : isDe ? '1. Setzen Sie Ihr Gesamtbudget' : isRu ? '1. Задайте общий бюджет' : '1. Set Your Total Budget'}</h3>
               <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">{isEs ? 'Empieza indicando tus ingresos mensuales y el porcentaje que quieres destinar a marketing.' : isDe ? 'Beginnen Sie mit dem monatlichen Umsatz und dem Anteil, den Sie ins Marketing investieren möchten.' : isRu ? 'Укажите месячную выручку и долю на маркетинг.' : 'Start by defining your overall monthly revenue and the percentage you want to allocate to marketing.'}</p>
             </div>
             <div className="space-y-8">
@@ -243,7 +243,7 @@ export default function BudgetCalculator({ lang }: { lang: string }) {
           {/* Goal Selection */}
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 dark:border-gray-700/20 py-10 md:grid-cols-2">
             <div>
-                <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white">{isEs ? '2. Elige tu objetivo principal' : isDe ? '2. Wählen Sie Ihr Primärziel' : isRu ? '2. Выберите основную цель' : '2. Choose Your Primary Goal'}</h3>
+                <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white" suppressHydrationWarning>{isEs ? '2. Elige tu objetivo principal' : isDe ? '2. Wählen Sie Ihr Primärziel' : isRu ? '2. Выберите основную цель' : '2. Choose Your Primary Goal'}</h3>
                 <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
                   {isEs ? 'Selecciona un objetivo para ver una asignación recomendada. Puedes personalizarla después.' : isDe ? 'Wählen Sie ein Ziel, um eine empfohlene Verteilung zu sehen. Danach können Sie anpassen.' : isRu ? 'Выберите цель, чтобы увидеть рекомендуемое распределение. Затем вы сможете его настроить.' : 'Select a goal to see a recommended budget allocation. You can customize it in the next step.'}
                 </p>
@@ -302,7 +302,7 @@ export default function BudgetCalculator({ lang }: { lang: string }) {
           {/* Allocation Breakdown */}
           <div className="grid grid-cols-1 gap-x-8 pt-10 md:grid-cols-2">
              <div>
-                <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white">{isEs ? '3. Distribuye tu presupuesto' : isDe ? '3. Verteilen Sie Ihr Budget' : isRu ? '3. Распределите бюджет' : '3. Allocate Your Budget'}</h3>
+                <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white" suppressHydrationWarning>{isEs ? '3. Distribuye tu presupuesto' : isDe ? '3. Verteilen Sie Ihr Budget' : isRu ? '3. Распределите бюджет' : '3. Allocate Your Budget'}</h3>
                 <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">{isEs ? 'Ajusta la asignación entre canales. El total debe ser 100%.' : isDe ? 'Feinjustierung der Verteilung auf die Kanäle. Die Summe muss 100% ergeben.' : isRu ? 'Отрегулируйте доли между каналами. В сумме должно быть 100%.' : 'Fine-tune your budget allocation across different channels. The total should be 100%.'}</p>
                 <div className="mt-6 text-center md:text-left">
                   <p className="text-lg font-medium text-gray-900 dark:text-white">{isEs ? 'Presupuesto mensual total:' : isDe ? 'Gesamtbudget pro Monat:' : isRu ? 'Итоговый бюджет в месяц:' : 'Total Monthly Budget:'}</p>

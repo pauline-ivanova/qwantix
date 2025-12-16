@@ -1,6 +1,5 @@
 import { getAllPosts } from '@/lib/posts';
 import { notFound } from 'next/navigation';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -10,6 +9,52 @@ import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/meta
 import { Metadata } from 'next';
 import TableOfContents from '@/app/components/blocks/TableOfContents';
 import { parseTableOfContents } from '@/lib/toc-parser';
+import { resetHeadingIdTracker } from '@/app/components/mdx/CustomComponents';
+import MarkdownContent from '@/app/components/mdx/MarkdownContent';
+import RelatedPosts from '@/app/components/blocks/RelatedPosts';
+import FunnelCTA from '@/app/components/blocks/FunnelCTA';
+
+// Category gradient colors matching the color scheme
+function getCategoryGradient(category: string): { from: string; to: string; radial: string } {
+  const gradients: Record<string, { from: string; to: string; radial: string }> = {
+    'SEO': {
+      from: 'from-[#4f46e5]',
+      to: 'to-indigo-800',
+      radial: 'rgba(79, 70, 229, 0.4)', // indigo-600 with opacity
+    },
+    'PPC': {
+      from: 'from-[#db2777]',
+      to: 'to-pink-800',
+      radial: 'rgba(219, 39, 119, 0.4)', // pink-600 with opacity
+    },
+    'Social Media Marketing': {
+      from: 'from-[#ea580c]',
+      to: 'to-orange-800',
+      radial: 'rgba(234, 88, 12, 0.4)', // orange-600 with opacity
+    },
+    'SMM': {
+      from: 'from-[#ea580c]',
+      to: 'to-orange-800',
+      radial: 'rgba(234, 88, 12, 0.4)', // orange-600 with opacity
+    },
+    'Content Creation': {
+      from: 'from-[#0891b2]',
+      to: 'to-cyan-800',
+      radial: 'rgba(8, 145, 178, 0.4)', // cyan-600 with opacity
+    },
+    'Content': {
+      from: 'from-[#0891b2]',
+      to: 'to-cyan-800',
+      radial: 'rgba(8, 145, 178, 0.4)', // cyan-600 with opacity
+    },
+  };
+
+  return gradients[category] || {
+    from: 'from-[#635bff]',
+    to: 'to-indigo-800',
+    radial: 'rgba(30, 27, 75, 0.4)', // default
+  };
+}
 
 const postsDirectory = path.join(process.cwd(), 'content', 'blog');
 
@@ -70,17 +115,54 @@ export default async function PostPage({ params }: { params: Promise<{ lang: str
     notFound();
   }
 
+  // Reset heading ID tracker before parsing TOC and rendering content
+  resetHeadingIdTracker();
+  
   // Parse TOC from content
   const tocItems = parseTableOfContents(post.content);
+  
+  // Get category-specific gradient colors
+  const category = post.frontmatter.category || 'SEO';
+  const gradient = getCategoryGradient(category);
+  
+  // Get text color based on category (lighter shade for better contrast)
+  const getCategoryTextColor = (cat: string): string => {
+    const colors: Record<string, string> = {
+      'SEO': 'text-indigo-300',
+      'PPC': 'text-pink-300',
+      'Social Media Marketing': 'text-orange-300',
+      'SMM': 'text-orange-300',
+      'Content Creation': 'text-cyan-300',
+      'Content': 'text-cyan-300',
+    };
+    return colors[cat] || 'text-indigo-300';
+  };
+  
+  const getCategoryTextLight = (cat: string): string => {
+    const colors: Record<string, string> = {
+      'SEO': 'text-indigo-100',
+      'PPC': 'text-pink-100',
+      'Social Media Marketing': 'text-orange-100',
+      'SMM': 'text-orange-100',
+      'Content Creation': 'text-cyan-100',
+      'Content': 'text-cyan-100',
+    };
+    return colors[cat] || 'text-indigo-100';
+  };
 
   return (
     <>
-      <div className="relative isolate bg-gradient-to-b from-[#635bff] to-indigo-800 py-24 sm:py-32">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,27,75,0.4),transparent_50%)]" />
+      <div className={`relative isolate bg-gradient-to-b ${gradient.from} ${gradient.to} py-24 sm:py-32`}>
+        <div 
+          className="absolute inset-0" 
+          style={{ 
+            background: `radial-gradient(circle at top left, ${gradient.radial}, transparent 50%)` 
+          }} 
+        />
         <div className="relative mx-auto max-w-4xl px-6 lg:px-8 text-center">
-          <p className="text-base font-semibold leading-7 text-indigo-300">{post.frontmatter.category}</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-6xl">{post.frontmatter.title}</h1>
-          <p className="mt-6 text-lg leading-8 text-indigo-100">{post.frontmatter.excerpt}</p>
+          <p className={`text-base font-semibold leading-7 ${getCategoryTextColor(category)}`}>{post.frontmatter.category}</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-6xl" suppressHydrationWarning>{post.frontmatter.title}</h1>
+          <p className={`mt-6 text-lg leading-8 ${getCategoryTextLight(category)}`}>{post.frontmatter.excerpt}</p>
         </div>
         <div
             className="absolute bottom-0 left-0 w-full h-20"
@@ -103,10 +185,28 @@ export default async function PostPage({ params }: { params: Promise<{ lang: str
             <TableOfContents items={tocItems} category={post.frontmatter.category || 'SEO'} />
           )}
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <MDXRemote source={post.content} />
+            <MarkdownContent 
+              content={post.content}
+              insertBeforeThirdH2={
+                <FunnelCTA
+                  lang={lang}
+                  category={category}
+                  currentSlug={slug}
+                  currentTitle={post.frontmatter.title}
+                />
+              }
+            />
           </div>
         </div>
       </div>
+      
+      {/* Related Posts */}
+      <RelatedPosts 
+        lang={lang} 
+        category={category} 
+        currentSlug={slug}
+      />
+      
       {/* JSON-LD Schema */}
       <JsonLd
         data={[

@@ -192,7 +192,7 @@ export default function CaseStudies({ lang = 'en' }: { lang?: string }) {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="grid grid-cols-1 items-center gap-x-8 gap-y-16 lg:grid-cols-2">
                     <div className="text-left max-w-lg">
-                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl no-hyphen-break">{lang === 'es' ? 'Resultados reales. Estrategia clara. Impacto medible.' : lang === 'de' ? 'Echte Ergebnisse. Klare Strategie. Messbarer Impact.' : lang === 'ru' ? (ru?.title ?? 'Реальные результаты. Понятная стратегия. Измеримый эффект.') : 'Real outcomes. Clear strategy. Measurable impact.'}</h2>
+                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl no-hyphen-break" suppressHydrationWarning>{lang === 'es' ? 'Resultados reales. Estrategia clara. Impacto medible.' : lang === 'de' ? 'Echte Ergebnisse. Klare Strategie. Messbarer Impact.' : lang === 'ru' ? (ru?.title ?? 'Реальные результаты. Понятная стратегия. Измеримый эффект.') : 'Real outcomes. Clear strategy. Measurable impact.'}</h2>
                         <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
                             {lang === 'es' ? 'Estamos orgullosos de los resultados que logramos. Aquí verás cómo hemos ayudado a empresas como la tuya a alcanzar sus objetivos.' : lang === 'de' ? 'Wir sind stolz auf unsere Ergebnisse. So unterstützen wir Unternehmen wie Ihres dabei, ihre digitalen Marketingziele zu erreichen.' : lang === 'ru' ? (ru?.description ?? 'Мы гордимся результатами. Вот как мы помогаем бизнесам достигать маркетинговых целей.') : "We're proud of the results we deliver. Here's a look at how we've helped businesses like yours achieve their digital marketing goals."}
                         </p>
@@ -218,7 +218,7 @@ export default function CaseStudies({ lang = 'en' }: { lang?: string }) {
                                     <span className={`inline-block self-start rounded-full px-3 py-1 text-xs font-semibold ${currentStudy.tagBgColor} ${currentStudy.tagTextColor}`}>
                                         {currentStudy.category}
                                     </span>
-                                    <h3 className="mt-3 text-xl font-bold leading-7 text-gray-900 dark:text-white">{currentStudy.title}</h3>
+                                    <h3 className="mt-3 text-xl font-bold leading-7 text-gray-900 dark:text-white" suppressHydrationWarning>{currentStudy.title}</h3>
                                     <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">{currentStudy.client}</p>
                                     <p className="mt-4 text-base leading-7 text-gray-700 dark:text-gray-300">{currentStudy.description}</p>
                                 </div>

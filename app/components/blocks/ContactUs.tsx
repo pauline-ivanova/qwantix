@@ -62,7 +62,7 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
     <div className="bg-gray-900 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl no-hyphen-break">{isEs ? 'Hablemos de tu proyecto' : isDe ? 'Sprechen wir über Ihr Projekt' : isRu ? 'Обсудим ваш проект' : "Let's Talk About Your Project"}</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl no-hyphen-break" suppressHydrationWarning>{isEs ? 'Hablemos de tu proyecto' : isDe ? 'Sprechen wir über Ihr Projekt' : isRu ? 'Обсудим ваш проект' : "Let's Talk About Your Project"}</h2>
           <p className="mt-6 text-lg leading-8 text-gray-300">
             {isEs ? 'Estamos aquí para ayudarte a alcanzar tus objetivos de marketing digital. Rellena el formulario y nos pondremos en contacto contigo para ver cómo podemos ayudarte.' : isDe ? 'Wir unterstützen Sie bei Ihren digitalen Marketingzielen. Füllen Sie das Formular aus – wir melden uns zeitnah, um Ihr Projekt zu besprechen.' : isRu ? 'Мы поможем достичь целей в digital‑маркетинге. Заполните форму — эксперты свяжутся с вами, чтобы обсудить проект и варианты стратегии.' : 'We’re here to help you achieve your digital marketing goals. Fill out the form below, and one of our experts will get back to you shortly to discuss your project and how we can help you succeed.'}
           </p>

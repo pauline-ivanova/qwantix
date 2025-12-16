@@ -17,7 +17,7 @@ export default function CTA({ lang = 'en' }: { lang?: string }) {
             <AuroraBackground variant="compact" blendMode="overlay" />
           </div>
           <div className="relative z-10">
-            <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl no-hyphen-break">
+            <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl no-hyphen-break" suppressHydrationWarning>
               {isEs ? '¿Listo para elevar tu visibilidad online?' : isDe ? 'Bereit, Ihre Online‑Sichtbarkeit zu steigern?' : isRu ? (ru?.title ?? 'Готовы повысить видимость онлайн?') : 'Ready to Elevate Your Online Visibility?'}
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">

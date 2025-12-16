@@ -30,7 +30,7 @@ const ServiceCardGrid: React.FC<ServiceCardGridProps> = ({ services, title, desc
     <section className={`${bgClass} ${paddingClasses}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">{title}</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl" suppressHydrationWarning>{title}</h2>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
             {description || "We offer a comprehensive suite of digital marketing services designed to elevate your brand and drive measurable results."}
           </p>
@@ -42,7 +42,7 @@ const ServiceCardGrid: React.FC<ServiceCardGridProps> = ({ services, title, desc
                 <div className="flex h-12 w-12 flex-none items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-900/30">
                   <service.icon className="h-8 w-8 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
                 </div>
-                <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-white no-hyphen-break">{service.name}</h3>
+                <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-white no-hyphen-break" suppressHydrationWarning>{service.name}</h3>
               </div>
               {service.leadText && <p className="mt-4 text-sm leading-6 text-gray-600 dark:text-gray-300">{service.leadText}</p>}
               {service.features && service.features.length > 0 && (

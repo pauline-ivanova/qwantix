@@ -23,8 +23,11 @@
     "negotiator": "^0.6.3",
     "next": "^16.0.10",
     "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote-client": "^2.1.7",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",

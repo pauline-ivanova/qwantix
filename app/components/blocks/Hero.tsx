@@ -13,7 +13,11 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle, buttonText }) => {
       <AuroraBackground />
       <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
         <div className="text-left">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl" style={{ textWrap: 'balance' }}>
+          <h1 
+            className="text-4xl font-bold tracking-tight text-white sm:text-6xl" 
+            style={{ textWrap: 'balance' }}
+            suppressHydrationWarning={true}
+          >
             {title}
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-300 max-w-2xl">{subtitle}</p>

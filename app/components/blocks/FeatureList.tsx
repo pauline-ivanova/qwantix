@@ -23,7 +23,7 @@ const FeatureList: React.FC<FeatureListProps> = ({ title, description, features,
     <div className={`${bgClass} ${paddingClasses}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">{title}</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl" suppressHydrationWarning>{title}</h2>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
             {description}
           </p>
@@ -36,7 +36,7 @@ const FeatureList: React.FC<FeatureListProps> = ({ title, description, features,
                   <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
                     <feature.icon className="h-6 w-6 text-white" aria-hidden="true" />
                   </div>
-                  <h3 className="text-lg">{feature.name}</h3>
+                  <h3 className="text-lg" suppressHydrationWarning>{feature.name}</h3>
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">{feature.description}</dd>
               </div>
