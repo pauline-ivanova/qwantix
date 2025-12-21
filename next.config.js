@@ -34,9 +34,9 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   experimental: {
-    optimizeCss: true, // Optimize CSS output to reduce render-blocking
-    optimizePackageImports: ['@heroicons/react'],
-    optimizeServerReact: true,
+    optimizeCss: false, // Optimize CSS output to reduce render-blocking
+    optimizePackageImports: ['@heroicons/react', 'lucide-react'],
+    optimizeServerReact: false,
     // Reduce legacy JavaScript by targeting modern browsers
     esmExternals: true,
   },
@@ -64,15 +64,15 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://placehold.co",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://placehold.co https://challenges.cloudflare.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self'",
+              "connect-src 'self' https://challenges.cloudflare.com",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-src 'self'",
+              "frame-src 'self' https://challenges.cloudflare.com",
               "object-src 'none'",
               "media-src 'self'",
               "worker-src 'self' blob:",

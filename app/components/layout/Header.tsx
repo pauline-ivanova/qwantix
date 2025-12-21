@@ -1,42 +1,114 @@
 'use client'
 
-import { Fragment, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { i18n } from '@/i18n.config'
 import Image from 'next/image'
-import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react'
-import {
-  ArrowPathIcon,
-  Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-  XMarkIcon,
-  SpeakerWaveIcon,
-  DocumentTextIcon,
-  ChartBarIcon,
-  SunIcon,
-  MoonIcon,
-} from '@heroicons/react/24/outline'
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 import dynamic from 'next/dynamic'
 import { useTheme } from '@/lib/theme'
-const StarBorder = dynamic(() => import('@/app/components/StarBorder'), { ssr: false })
+import MobileMenu from './MobileMenu'
+
+// Inline SVG icons to avoid loading @heroicons/react bundle
+const Bars3Icon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+  </svg>
+)
+
+const ChartBarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+  </svg>
+)
+
+const CursorArrowRaysIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M16.5 16.5l1.591 1.591M12 18.75V21m-4.5-4.5L5.909 18.09M3.75 10.5H6m.166-5.834 1.591 1.591" />
+  </svg>
+)
+
+const SpeakerWaveIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+  </svg>
+)
+
+const DocumentTextIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+  </svg>
+)
+
+// Dynamic import for DesktopMenu - it uses heavy @headlessui/react, defer loading
+// Defer DesktopMenu loading until after page is interactive to reduce TBT
+const DesktopMenu = dynamic(() => import('./DesktopMenu'), {
+  ssr: false, // Defer @headlessui/react bundle loading
+  loading: () => null, // No placeholder to avoid any JS execution
+})
 
 // hrefs will be filled dynamically using the detected lang; strings localized later
 const baseServices = [
-  { name: 'SEO', nameEs: 'SEO', nameDe: 'SEO', nameRu: 'SEO', description: 'Boost your visibility in search rankings', descriptionEs: 'Aumenta tu visibilidad en los resultados de búsqueda', descriptionDe: 'Steigern Sie Ihre Sichtbarkeit in den Suchergebnissen', descriptionRu: 'Повышайте видимость в поисковой выдаче', slug: 'seo', icon: ChartBarIcon },
-  { name: 'PPC Advertising', nameEs: 'Publicidad PPC', nameDe: 'PPC‑Werbung', nameRu: 'PPC‑реклама', description: 'Maximize your return on ad spend', descriptionEs: 'Maximiza el retorno de tu inversión publicitaria', descriptionDe: 'Maximieren Sie den ROAS Ihrer Werbeausgaben', descriptionRu: 'Максимизируйте возврат на рекламные расходы', slug: 'ppc-advertising', icon: CursorArrowRaysIcon },
-  { name: 'Social Media Marketing', nameEs: 'Marketing en redes sociales', nameDe: 'Social-Media-Marketing', nameRu: 'Маркетинг в соцсетях', description: 'Engage and grow your audience', descriptionEs: 'Impulsa y haz crecer tu audiencia', descriptionDe: 'Binden Sie Ihre Zielgruppe ein und lassen Sie sie wachsen', descriptionRu: 'Увлекайте аудиторию и растите охват', slug: 'social-media-marketing', icon: SpeakerWaveIcon },
-  { name: 'Content Creation', nameEs: 'Creación de contenido', nameDe: 'Content‑Erstellung', nameRu: 'Контент‑маркетинг', description: 'Captivate with compelling content', descriptionEs: 'Cautiva con contenido de alto impacto', descriptionDe: 'Überzeugen Sie mit starkem Content', descriptionRu: 'Увлекайте сильным контентом', slug: 'content-creation', icon: DocumentTextIcon },
+  { 
+    name: 'SEO', 
+    nameEs: 'SEO', 
+    nameDe: 'SEO', 
+    nameRu: 'SEO', 
+    slug: 'seo', 
+    icon: ChartBarIcon,
+    subservices: [
+      { name: 'Comprehensive SEO', nameEs: 'SEO Integral', nameDe: 'Umfassendes SEO', nameRu: 'Комплексное SEO', slug: 'comprehensive-seo' },
+      { name: 'Local SEO', nameEs: 'SEO Local', nameDe: 'Lokales SEO', nameRu: 'Локальное SEO', slug: 'local-seo' },
+      { name: 'Technical SEO', nameEs: 'SEO Técnico', nameDe: 'Technisches SEO', nameRu: 'Техническое SEO', slug: 'technical-seo' },
+      { name: 'E-commerce SEO', nameEs: 'SEO para E-commerce', nameDe: 'E-Commerce SEO', nameRu: 'SEO для интернет-магазинов', slug: 'e-commerce-seo' },
+    ]
+  },
+  { 
+    name: 'PPC Advertising', 
+    nameEs: 'Publicidad PPC', 
+    nameDe: 'PPC‑Werbung', 
+    nameRu: 'PPC‑реклама', 
+    slug: 'ppc-advertising', 
+    icon: CursorArrowRaysIcon,
+    subservices: [
+      { name: 'Search Ads', nameEs: 'Anuncios de Búsqueda', nameDe: 'Suchanzeigen', nameRu: 'Поисковая реклама', slug: 'search-ads' },
+      { name: 'Shopping Ads', nameEs: 'Anuncios de Shopping', nameDe: 'Shopping-Anzeigen', nameRu: 'Товарные объявления', slug: 'shopping-ads' },
+      { name: 'Display & Social Media Ads', nameEs: 'Anuncios Display y Redes Sociales', nameDe: 'Display- und Social-Media-Anzeigen', nameRu: 'Медийная и реклама в соцсетях', slug: 'display-social-media-ads' },
+    ]
+  },
+  { 
+    name: 'Social Media Marketing', 
+    nameEs: 'Marketing en redes sociales', 
+    nameDe: 'Social-Media-Marketing', 
+    nameRu: 'Маркетинг в соцсетях', 
+    slug: 'social-media-marketing', 
+    icon: SpeakerWaveIcon,
+    subservices: [
+      { name: 'Organic SMM', nameEs: 'SMM Orgánico', nameDe: 'Organisches SMM', nameRu: 'Органический SMM', slug: 'organic-smm' },
+      { name: 'SMM Content Creation', nameEs: 'Creación de Contenido SMM', nameDe: 'SMM-Content-Erstellung', nameRu: 'Создание контента для SMM', slug: 'smm-content-creation' },
+      { name: 'SMM Community Management', nameEs: 'Gestión de Comunidad SMM', nameDe: 'SMM-Community-Management', nameRu: 'Управление сообществом SMM', slug: 'smm-community-management' },
+    ]
+  },
+  { 
+    name: 'Content Creation', 
+    nameEs: 'Creación de contenido', 
+    nameDe: 'Content‑Erstellung', 
+    nameRu: 'Контент‑маркетинг', 
+    slug: 'content-creation', 
+    icon: DocumentTextIcon,
+    subservices: [
+      { name: 'Content Strategy', nameEs: 'Estrategia de Contenido', nameDe: 'Content-Strategie', nameRu: 'Стратегия контента', slug: 'content-strategy' },
+      { name: 'Content Localization', nameEs: 'Localización de Contenido', nameDe: 'Content-Lokalisierung', nameRu: 'Локализация контента', slug: 'content-localization' },
+      { name: 'Copywriting', nameEs: 'Copywriting', nameDe: 'Copywriting', nameRu: 'Копирайтинг', slug: 'copywriting' },
+      { name: 'Visual Content Production', nameEs: 'Producción de Contenido Visual', nameDe: 'Visuelle Content-Produktion', nameRu: 'Производство визуального контента', slug: 'visual-content-production' },
+    ]
+  },
 ]
 
 // hrefs will be filled dynamically using the detected lang
 const baseNavigation = [
-  { name: 'Case Studies', nameEs: 'Casos', nameDe: 'Case Studies', nameRu: 'Кейсы', anchor: '#case-studies' },
-  { name: 'About Us', nameEs: 'Sobre nosotros', nameDe: 'Über uns', nameRu: 'О нас', anchor: '#why-choose-us' },
+  { name: 'Case Studies', nameEs: 'Casos', nameDe: 'Case Studies', nameRu: 'Кейсы', path: '/case-studies' },
+  { name: 'About Us', nameEs: 'Sobre nosotros', nameDe: 'Über uns', nameRu: 'О нас', path: '/about' },
   { name: 'Blog', nameEs: 'Blog', nameDe: 'Blog', nameRu: 'Блог', path: '/blog' },
   { name: 'Contact', nameEs: 'Contacto', nameDe: 'Kontakt', nameRu: 'Контакты', anchor: '#contact-us' },
 ]
@@ -45,6 +117,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDark, setIsDark] = useState(false)
+  const [shouldLoadDesktopMenu, setShouldLoadDesktopMenu] = useState(false)
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
 
@@ -61,6 +134,31 @@ export default function Header() {
       setIsDark(theme === 'dark')
     }
   }, [theme])
+
+  // Defer DesktopMenu loading until after initial render to reduce TBT
+  useEffect(() => {
+    // Only load on desktop viewport
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      // Load after a short delay to allow critical content to render first
+      // Use requestIdleCallback for better performance, but with shorter timeout
+      const loadMenu = () => {
+        setShouldLoadDesktopMenu(true)
+      }
+
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(loadMenu, { timeout: 1500 })
+      } else {
+        // Fallback: load after DOMContentLoaded
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(loadMenu, 500)
+          })
+        } else {
+          setTimeout(loadMenu, 500)
+        }
+      }
+    }
+  }, [])
 
   // Build a localized href for the current path with the chosen locale
   const buildLocaleHref = (locale: string) => {
@@ -149,9 +247,12 @@ export default function Header() {
 
   const services = baseServices.map((s) => ({
     name: isEs ? (s as any).nameEs : isDe ? (s as any).nameDe : isRu ? (s as any).nameRu : s.name,
-    description: isEs ? (s as any).descriptionEs : isDe ? (s as any).descriptionDe : isRu ? (s as any).descriptionRu : s.description,
     href: `/${detectedLang}/services/${s.slug}`,
     icon: s.icon,
+    subservices: s.subservices.map((sub) => ({
+      name: isEs ? (sub as any).nameEs : isDe ? (sub as any).nameDe : isRu ? (sub as any).nameRu : sub.name,
+      href: `/${detectedLang}/services/${sub.slug}`,
+    })),
   }))
 
   const navigation = baseNavigation.map((n) => {
@@ -172,16 +273,15 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-gray-900/80 backdrop-blur-sm shadow-lg' : ''
+        isScrolled ? 'bg-gray-900/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
-        <div className="flex lg:flex-1">
-          <Link href={`/${detectedLang}`} className="-m-1.5 p-1.5">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8 h-20" aria-label="Global">
+        <div className="flex lg:flex-none">
+          <Link href={`/${detectedLang}`} className="-m-1.5 p-1.5 flex items-center">
             <span className="sr-only">Qwantix</span>
             <Image
               className="h-8 w-auto"
@@ -205,235 +305,44 @@ export default function Header() {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <Popover className="relative">
-            <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-white">
-              {isEs ? 'Servicios' : isDe ? 'Leistungen' : isRu ? 'Услуги' : 'Services'}
-              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
-            </Popover.Button>
-            <Popover.Overlay className="fixed inset-0 z-40" />
-
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="absolute -left-8 top-full z-50 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
-                <div className="p-4">
-                  {services.map((item) => (
-                    <div
-                      key={item.name}
-                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
-                    >
-                      <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
-                      </div>
-                      <div className="flex-auto">
-                        <Link href={item.href} className="block font-semibold text-gray-900">
-                          {item.name}
-                          <span className="absolute inset-0" />
-                        </Link>
-                        <p className="mt-1 text-gray-600">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </Popover>
-
-          {navigation.map((item) => (
-            <Link key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-white">
-              {item.name}
-            </Link>
-          ))}
-        </Popover.Group>
-        <div className="hidden lg:flex lg:items-center lg:gap-x-6 lg:flex-1 lg:justify-end">
-          <Popover className="relative">
-            <Popover.Button className="flex items-center gap-x-1 rounded-lg px-2 py-1.5 text-xs font-semibold leading-6 text-white hover:bg-white/10">
-              {detectedLang.toUpperCase()}
-              <ChevronDownIcon className="h-4 w-4 flex-none text-gray-400" aria-hidden="true" />
-            </Popover.Button>
-            <Popover.Overlay className="fixed inset-0 z-40" />
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="absolute right-0 top-full z-50 mt-2 w-36 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5">
-                <div className="p-1">
-                  {switchableLocales.map((loc) => (
-                    <Link
-                      key={loc}
-                      href={buildLocaleHref(loc)}
-                      className={`flex items-center gap-x-2 rounded-md px-3 py-2 text-sm ${loc === detectedLang ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50'}`}
-                    >
-                      <FlagIcon locale={loc} />
-                      {getLocaleLabel(loc)}
-                    </Link>
-                  ))}
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </Popover>
-          <button
-            type="button"
-            onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="rounded-lg p-2 text-white hover:bg-white/10 transition-colors"
-            aria-label="Toggle theme"
-          >
-            {isDark ? (
-              <SunIcon className="h-5 w-5" />
-            ) : (
-              <MoonIcon className="h-5 w-5" />
-            )}
-          </button>
-          <StarBorder
-            as="a"
-            href={`/${detectedLang}#contact-us`}
-            color="rgba(255,255,255,0.85)"
-            speed="7s"
-            thickness={2}
-            radius={8}
-            className="shadow-sm"
-            innerStyle={{
-              background: '#4f46e5', /* indigo-600 */
-              fontSize: '0.875rem',   /* text-sm */
-              padding: '10px 14px'    /* py-2.5 px-3.5 */
-            }}
-          >
-            {isEs ? 'Agendar una llamada' : isDe ? 'Gespräch vereinbaren' : isRu ? 'Записаться на консультацию' : 'Schedule a Call'}
-          </StarBorder>
-        </div>
+        {/* Desktop menu - lazy loaded, only renders when visible, deferred until interactive */}
+        {shouldLoadDesktopMenu && (
+          <DesktopMenu
+            services={services}
+            navigation={navigation}
+            detectedLang={detectedLang}
+            pathname={pathname || ''}
+            switchableLocales={switchableLocales}
+            buildLocaleHref={buildLocaleHref}
+            FlagIcon={FlagIcon}
+            getLocaleLabel={getLocaleLabel}
+            isDark={isDark}
+            setTheme={setTheme}
+            isEs={isEs}
+            isDe={isDe}
+            isRu={isRu}
+          />
+        )}
       </nav>
-      <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
-        <div className="fixed inset-0 z-50" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
-          <div className="flex items-center justify-between">
-            <Link href={`/${detectedLang}`} className="-m-1.5 p-1.5">
-              <span className="sr-only">Qwantix</span>
-              <Image
-                className="h-8 w-auto"
-                src="/images/qwantix-logo-white.svg"
-                alt="Qwantix Agency"
-                width={115}
-                height={32}
-                sizes="115px"
-                priority
-                fetchPriority="high"
-              />
-            </Link>
-            <button
-              type="button"
-              className="-m-2.5 rounded-md p-2.5 text-gray-400"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span className="sr-only">{isEs ? 'Cerrar menú' : isDe ? 'Menü schließen' : isRu ? 'Закрыть меню' : 'Close menu'}</span>
-              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/25">
-              <div className="space-y-2 py-6">
-                <Disclosure as="div" className="-mx-3">
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-white hover:bg-gray-800">
-                        {isEs ? 'Servicios' : isDe ? 'Leistungen' : isRu ? 'Услуги' : 'Services'}
-                        <ChevronDownIcon
-                          className={`h-5 w-5 flex-none ${open ? 'rotate-180' : ''}`}
-                          aria-hidden="true"
-                        />
-                      </Disclosure.Button>
-                      <Disclosure.Panel className="mt-2 space-y-2">
-                        {services.map((item) => (
-                          <Disclosure.Button
-                            key={item.name}
-                            as="a"
-                            href={item.href}
-                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-400 hover:bg-gray-800"
-                          >
-                            {item.name}
-                          </Disclosure.Button>
-                        ))}
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-              <div className="py-6">
-                <Disclosure as="div" className="-mx-3">
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800">
-                        {isEs ? 'Idioma' : isDe ? 'Sprache' : isRu ? 'Язык' : 'Language'}
-                        <ChevronDownIcon className={`h-5 w-5 flex-none ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-                      </Disclosure.Button>
-                      <Disclosure.Panel className="mt-2 space-y-1 px-3">
-                        {switchableLocales.map((loc) => (
-                          <Link
-                            key={loc}
-                            href={buildLocaleHref(loc)}
-                            className={`flex items-center gap-x-2 rounded-lg py-2 pl-2 pr-3 text-sm font-semibold leading-7 ${loc === detectedLang ? 'text-white' : 'text-gray-300 hover:text-white'} hover:bg-gray-800`}
-                          >
-                            <FlagIcon locale={loc} />
-                            {getLocaleLabel(loc)}
-                          </Link>
-                        ))}
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              </div>
-              <div className="py-6">
-                <button
-                  type="button"
-                  onClick={() => setTheme(isDark ? 'light' : 'dark')}
-                  className="-mx-3 flex w-full items-center gap-x-3 rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                >
-                  {isDark ? (
-                    <>
-                      <SunIcon className="h-5 w-5" />
-                      {isEs ? 'Modo claro' : isDe ? 'Heller Modus' : isRu ? 'Светлая тема' : 'Light Mode'}
-                    </>
-                  ) : (
-                    <>
-                      <MoonIcon className="h-5 w-5" />
-                      {isEs ? 'Modo oscuro' : isDe ? 'Dunkler Modus' : isRu ? 'Тёмная тема' : 'Dark Mode'}
-                    </>
-                  )}
-                </button>
-              </div>
-              <div className="py-6">
-                <Link
-                  href={`/${detectedLang}#contact-us`}
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                >
-                  {isEs ? 'Agendar una llamada' : isDe ? 'Gespräch vereinbaren' : isRu ? 'Записаться на консультацию' : 'Schedule a Call'}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Dialog.Panel>
-      </Dialog>
+      {mobileMenuOpen && (
+        <MobileMenu
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+          services={services}
+          navigation={navigation}
+          detectedLang={detectedLang}
+          pathname={pathname || ''}
+          switchableLocales={switchableLocales}
+          buildLocaleHref={buildLocaleHref}
+          FlagIcon={FlagIcon}
+          getLocaleLabel={getLocaleLabel}
+          isDark={isDark}
+          setTheme={setTheme}
+          isEs={isEs}
+          isDe={isDe}
+          isRu={isRu}
+        />
+      )}
     </header>
   )
 }

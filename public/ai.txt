@@ -1,0 +1,25 @@
+# ai.txt for Qwantix Agency
+# Controls how AI models and crawlers interact with our content
+
+User-agent: GPTBot
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /blog/
+Allow: /services/
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+# Content usage policy
+# We allow AI models to crawl our public blog posts and service pages 
+# for indexing and summarization purposes, provided that attribution 
+# is given to Qwantix Agency.
+

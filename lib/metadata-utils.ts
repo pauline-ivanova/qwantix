@@ -76,6 +76,17 @@ const languageToLocale: Record<string, string> = {
   ru: 'ru_RU',
 };
 
+/**
+ * Maps language codes to regional variants for hreflang
+ * This helps with regional SEO targeting (Spain, Germany, UK)
+ */
+const languageToRegional: Record<string, string> = {
+  en: 'en-GB', // UK English for regional targeting
+  de: 'de-DE', // Germany
+  es: 'es-ES', // Spain
+  ru: 'ru-RU', // Russia
+};
+
 export function generateStandardMetadata(options: StandardMetadataOptions): Partial<Metadata> {
   const {
     title,
@@ -119,13 +130,19 @@ export function generateStandardMetadata(options: StandardMetadataOptions): Part
   // Add current language
   languages[language] = url;
   
+  // Add current language regional variant (e.g., en-GB for UK targeting)
+  const currentRegional = languageToRegional[language];
+  if (currentRegional) {
+    languages[currentRegional] = url;
+  }
+  
   // Add alternate languages if provided
   Object.entries(alternateLanguages).forEach(([lang, langUrl]) => {
     languages[lang] = langUrl;
   });
   
   // Add x-default (usually pointing to English or main language)
-  languages['x-default'] = alternateLanguages['en'] || url;
+  languages['x-default'] = alternateLanguages['en'] || alternateLanguages['en-GB'] || url;
 
   const metadata: Partial<Metadata> = {
     title: truncateTitle(title),
@@ -175,6 +192,7 @@ export function generateStandardMetadata(options: StandardMetadataOptions): Part
 /**
  * Helper function to generate alternate language URLs for hreflang
  * This creates URLs for all supported languages based on the current path
+ * Includes both language codes (en, de, es) and regional variants (en-GB, de-DE, es-ES)
  */
 export function generateAlternateLanguages(
   currentLang: string,
@@ -196,12 +214,29 @@ export function generateAlternateLanguages(
   }).join('/');
 
   // Generate URLs for all supported languages
+  // Add both language code (en) and regional variant (en-GB) for better regional SEO
   i18n.locales.forEach((lang) => {
+    const langPath = pathWithoutLang ? `/${lang}/${pathWithoutLang}` : `/${lang}`;
+    const fullUrl = `${baseUrl}${langPath}`;
+    
+    // Add language code variant (e.g., "en")
     if (lang !== currentLang) {
-      const langPath = pathWithoutLang ? `/${lang}/${pathWithoutLang}` : `/${lang}`;
-      alternates[lang] = `${baseUrl}${langPath}`;
+      alternates[lang] = fullUrl;
+    }
+    
+    // Add regional variant (e.g., "en-GB") for regional SEO targeting
+    const regional = languageToRegional[lang];
+    if (regional) {
+      alternates[regional] = fullUrl;
     }
   });
+
+  // Add current language with regional variant
+  const currentRegional = languageToRegional[currentLang];
+  if (currentRegional) {
+    const currentLangPath = pathWithoutLang ? `/${currentLang}/${pathWithoutLang}` : `/${currentLang}`;
+    alternates[currentRegional] = `${baseUrl}${currentLangPath}`;
+    }
 
   return alternates;
 }

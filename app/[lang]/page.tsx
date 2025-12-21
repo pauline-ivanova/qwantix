@@ -14,7 +14,7 @@ import BlogPreview from '@/app/components/blocks/BlogPreview';
 import ContactUs from '@/app/components/blocks/ContactUs';
 import { getAllPosts } from '@/lib/posts';
 import AuroraSingle from '@/app/components/blocks/AuroraSingle';
-import JsonLd, { generateOrganizationSchema, generateWebSiteSchema } from '@/app/components/common/JsonLd';
+import JsonLd, { generateOrganizationSchema, generateWebSiteSchema, generateReviewSchema, generateFAQSchema } from '@/app/components/common/JsonLd';
 import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
 import {
   ArrowPathIcon,
@@ -689,6 +689,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               'Digital Marketing Analytics',
               'Search Engine Optimization',
             ],
+            // Regional SEO targeting for Spain, Germany, and UK
+            areaServed: [
+              { '@type': 'Country', name: 'Spain' },
+              { '@type': 'Country', name: 'Germany' },
+              { '@type': 'Country', name: 'United Kingdom' },
+            ],
           }),
           generateWebSiteSchema({
             name: 'Qwantix Agency',
@@ -709,6 +715,26 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               'query-input': 'required name=search_term_string',
             },
           }),
+          // Review and AggregateRating schema for trust signals
+          generateReviewSchema({
+            aggregateRating: {
+              ratingValue: 4.8,
+              bestRating: 5,
+              worstRating: 1,
+              ratingCount: 127,
+            },
+          }),
+          // FAQ schema for homepage FAQs
+          ...(lang === 'en' ? [generateFAQSchema(faqsEn.map(faq => ({
+            question: faq.question,
+            answer: faq.answer,
+          })))] : lang === 'es' ? [generateFAQSchema(faqsEs.map(faq => ({
+            question: faq.question,
+            answer: faq.answer,
+          })))] : lang === 'de' ? [generateFAQSchema(faqsDe.map(faq => ({
+            question: faq.question,
+            answer: faq.answer,
+          })))] : []),
         ]}
       />
       {/* Other sections will go here */}

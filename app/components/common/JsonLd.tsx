@@ -29,6 +29,7 @@ export function generateOrganizationSchema({
   sameAs,
   slogan,
   knowsAbout,
+  areaServed,
 }: {
   name: string;
   url: string;
@@ -41,6 +42,7 @@ export function generateOrganizationSchema({
   sameAs?: string[]; // Social media links
   slogan?: string;
   knowsAbout?: string[]; // Areas of expertise
+  areaServed?: Array<{ '@type': string; name: string }>; // Geographic areas served (for regional SEO)
 }) {
   const schema: any = {
     '@context': 'https://schema.org',
@@ -68,6 +70,11 @@ export function generateOrganizationSchema({
 
   if (knowsAbout && knowsAbout.length > 0) {
     schema.knowsAbout = knowsAbout;
+  }
+
+  // Add areaServed for regional SEO targeting (Spain, Germany, UK)
+  if (areaServed && areaServed.length > 0) {
+    schema.areaServed = areaServed;
   }
 
   return schema;
@@ -336,8 +343,265 @@ export function generateReviewSchema({
         bestRating: '5',
         worstRating: '1',
       },
-      datePublished: review.datePublished || new Date().toISOString().split('T')[0],
+      datePublished: review.datePublished || '2025-12-21',
     }));
+  }
+
+  return schema;
+}
+
+/**
+ * Generate HowTo schema for step-by-step instructions
+ * Useful for tutorials and guides
+ */
+export function generateHowToSchema({
+  name,
+  description,
+  step,
+  totalTime,
+  image,
+  url,
+}: {
+  name: string;
+  description: string;
+  step: Array<{
+    name: string;
+    text: string;
+    image?: string;
+    url?: string;
+  }>;
+  totalTime?: string; // ISO 8601 duration (e.g., "PT30M" for 30 minutes)
+  image?: string;
+  url?: string;
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  
+  const schema: any = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name,
+    description,
+    step: step.map((s, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: s.name,
+      text: s.text,
+      ...(s.image && {
+        image: s.image.startsWith('http') ? s.image : `${baseUrl}${s.image.startsWith('/') ? '' : '/'}${s.image}`,
+      }),
+      ...(s.url && {
+        url: s.url.startsWith('http') ? s.url : `${baseUrl}${s.url.startsWith('/') ? '' : '/'}${s.url}`,
+      }),
+    })),
+  };
+
+  if (totalTime) {
+    schema.totalTime = totalTime;
+  }
+
+  if (image) {
+    schema.image = image.startsWith('http') ? image : `${baseUrl}${image.startsWith('/') ? '' : '/'}${image}`;
+  }
+
+  if (url) {
+    schema.url = url.startsWith('http') ? url : `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+
+  return schema;
+}
+
+/**
+ * Generate VideoObject schema for video content
+ * Useful for YouTube videos, tutorials, and video content
+ */
+export function generateVideoObjectSchema({
+  name,
+  description,
+  thumbnailUrl,
+  uploadDate,
+  duration,
+  contentUrl,
+  embedUrl,
+  publisher,
+}: {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  uploadDate: string;
+  duration?: string; // ISO 8601 duration (e.g., "PT5M30S" for 5 minutes 30 seconds)
+  contentUrl?: string; // Direct video URL
+  embedUrl?: string; // Embed URL (e.g., YouTube embed)
+  publisher?: {
+    name: string;
+    logo?: string;
+  };
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  
+  const schema: any = {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name,
+    description,
+    thumbnailUrl: thumbnailUrl.startsWith('http') 
+      ? thumbnailUrl 
+      : `${baseUrl}${thumbnailUrl.startsWith('/') ? '' : '/'}${thumbnailUrl}`,
+    uploadDate,
+  };
+
+  if (duration) {
+    schema.duration = duration;
+  }
+
+  if (contentUrl) {
+    schema.contentUrl = contentUrl.startsWith('http') ? contentUrl : `${baseUrl}${contentUrl.startsWith('/') ? '' : '/'}${contentUrl}`;
+  }
+
+  if (embedUrl) {
+    schema.embedUrl = embedUrl;
+  }
+
+  if (publisher) {
+    schema.publisher = {
+      '@type': 'Organization',
+      name: publisher.name,
+      ...(publisher.logo && {
+        logo: {
+          '@type': 'ImageObject',
+          url: publisher.logo.startsWith('http') 
+            ? publisher.logo 
+            : `${baseUrl}${publisher.logo.startsWith('/') ? '' : '/'}${publisher.logo}`,
+        },
+      }),
+    };
+  }
+
+  return schema;
+}
+
+/**
+ * Generate LocalBusiness schema for local SEO
+ * Important for businesses targeting specific geographic locations
+ */
+export function generateLocalBusinessSchema({
+  name,
+  description,
+  address,
+  telephone,
+  email,
+  url,
+  priceRange,
+  openingHours,
+  image,
+  areaServed,
+  geo,
+  aggregateRating,
+}: {
+  name: string;
+  description?: string;
+  address: {
+    streetAddress?: string;
+    addressLocality: string;
+    addressRegion?: string;
+    postalCode?: string;
+    addressCountry: string;
+  };
+  telephone?: string;
+  email?: string;
+  url?: string;
+  priceRange?: string; // e.g., "$$" or "€€€"
+  openingHours?: string | string[]; // e.g., "Mo-Fr 09:00-17:00" or array of strings
+  image?: string;
+  areaServed?: Array<{ '@type': string; name: string }>;
+  geo?: {
+    latitude: number;
+    longitude: number;
+  };
+  aggregateRating?: {
+    ratingValue: number;
+    bestRating?: number;
+    worstRating?: number;
+    ratingCount: number;
+  };
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  
+  const schema: any = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: address.addressLocality,
+      addressCountry: address.addressCountry,
+      ...(address.streetAddress && { streetAddress: address.streetAddress }),
+      ...(address.addressRegion && { addressRegion: address.addressRegion }),
+      ...(address.postalCode && { postalCode: address.postalCode }),
+    },
+  };
+
+  if (description) {
+    schema.description = description;
+  }
+
+  if (telephone) {
+    schema.telephone = telephone;
+  }
+
+  if (email) {
+    schema.email = email;
+  }
+
+  if (url) {
+    schema.url = url.startsWith('http') ? url : `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  } else {
+    schema.url = baseUrl;
+  }
+
+  if (priceRange) {
+    schema.priceRange = priceRange;
+  }
+
+  if (openingHours) {
+    schema.openingHoursSpecification = Array.isArray(openingHours)
+      ? openingHours.map(hours => ({
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: hours.split(' ')[0],
+          opens: hours.split(' ')[1]?.split('-')[0],
+          closes: hours.split(' ')[1]?.split('-')[1],
+        }))
+      : {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: openingHours.split(' ')[0],
+          opens: openingHours.split(' ')[1]?.split('-')[0],
+          closes: openingHours.split(' ')[1]?.split('-')[1],
+        };
+  }
+
+  if (image) {
+    schema.image = image.startsWith('http') ? image : `${baseUrl}${image.startsWith('/') ? '' : '/'}${image}`;
+  }
+
+  if (areaServed && areaServed.length > 0) {
+    schema.areaServed = areaServed;
+  }
+
+  if (geo) {
+    schema.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: geo.latitude,
+      longitude: geo.longitude,
+    };
+  }
+
+  if (aggregateRating) {
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: aggregateRating.ratingValue.toString(),
+      bestRating: (aggregateRating.bestRating || 5).toString(),
+      worstRating: (aggregateRating.worstRating || 1).toString(),
+      ratingCount: aggregateRating.ratingCount.toString(),
+    };
   }
 
   return schema;

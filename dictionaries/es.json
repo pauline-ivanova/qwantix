@@ -1,2 +1,58 @@
-{}
-
+{
+  "about": {
+    "meta": {
+      "title": "Sobre Qwantix: Marketing Digital Basado en Estrategia",
+      "description": "Conozca Qwantix, nuestra filosofía de crecimiento centrada en SEO y nuestro compromiso con la creación de sistemas de marketing sostenibles."
+    },
+    "hero": {
+      "title": "Marketing digital basado en estrategia: búsqueda, estructura y resultados medibles",
+      "subtitle": "Qwantix es una consultoría de marketing digital donde la estrategia centrada en SEO es el núcleo de las decisiones de crecimiento. Ayudamos a las empresas a mejorar la visibilidad, la demanda y la conversión.",
+      "buttonText": "Contactar"
+    },
+    "principles": {
+      "title": "Cómo pensamos en el crecimiento digital",
+      "description": "El marketing digital funciona mejor cuando actúa como un sistema, no como una colección de servicios. No empezamos con canales o herramientas; empezamos entendiendo cómo buscan los usuarios, cómo se captura la demanda y cómo se estructura un sitio web para apoyar ese viaje.",
+      "items": [
+        { "name": "La búsqueda como base", "description": "El SEO informa la estructura, el contenido y la intención, y apoya decisiones más inteligentes en los canales pagados y orgánicos." },
+        { "name": "Estructura antes que escala", "description": "El crecimiento solo funciona cuando la arquitectura del sitio, los roles de las páginas y la lógica interna están claramente definidos." },
+        { "name": "Intención sobre volumen", "description": "El tráfico solo importa cuando refleja una demanda real y apoya los objetivos del negocio." },
+        { "name": "EEAT diseñado en el sistema", "description": "La confianza, la experiencia y la autoridad se construyen a través de la jerarquía del contenido, la autoría, los enlaces internos y las decisiones técnicas." }
+      ]
+    },
+    "work": {
+      "title": "En qué trabajamos",
+      "description": "Qwantix suele apoyar proyectos donde las decisiones digitales tienen un impacto directo en los ingresos, la confianza o la escalabilidad.",
+      "items": [
+        "Reconstrucciones y migraciones de sitios web centradas en SEO",
+        "SEO local y basado en servicios en mercados competitivos",
+        "Estrategia de SEO empresarial y para múltiples mercados",
+        "Optimización centrada en EEAT para industrias reguladas o de alta confianza",
+        "Marcos de contenido y semántica para un crecimiento escalable",
+        "SEO multilingüe y de localización en los mercados del Reino Unido, EE. UU. y la UE"
+      ]
+    },
+    "consultant": {
+      "title": "Sobre el consultor detrás de Qwantix",
+      "description": "Qwantix está liderado por un consultor de marketing digital multilingüe con experiencia en derecho, industrias reguladas y estrategia digital internacional.",
+      "background": [
+        "Comodidad trabajando en nichos con alta regulación y riesgo",
+        "Experiencia traduciendo conocimientos complejos en demanda de búsqueda",
+        "Fluidez en los mercados de inglés, español, alemán y ruso",
+        "Capacidad para alinear decisiones de marketing con restricciones legales, médicas y operativas"
+      ]
+    },
+    "howWeWork": {
+      "eyebrow": "Nuestra Filosofía",
+      "title": "Cómo trabajamos con los clientes",
+      "description": "No vendemos paquetes fijos ni retenciones genéricas. Nos centramos en construir modelos de crecimiento sostenible, no en tácticas desconectadas.",
+      "itemsTitle": "Qwantix funciona mejor con equipos que:",
+      "items": [
+        "Valoran la claridad estratégica sobre las victorias rápidas",
+        "Operan en entornos competitivos o complejos",
+        "Necesitan estructura, priorización y dirección a largo plazo",
+        "Quieren decisiones de marketing digital fundamentadas en la búsqueda y el análisis"
+      ],
+      "additionalInfo": "La mayoría de las colaboraciones comienzan con una revisión estratégica enfocada o un proyecto claramente definido, en lugar de un compromiso abierto."
+    }
+  }
+}

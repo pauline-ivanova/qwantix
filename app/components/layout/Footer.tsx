@@ -5,23 +5,84 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { i18n } from '@/i18n.config';
 import { openCookieSettings } from '@/lib/cookie-utils';
+import { Disclosure, Transition } from '@headlessui/react';
+
+const ChevronDownIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+  </svg>
+);
 
 const navBase = {
   services: [
-    { name: 'SEO', nameEs: 'SEO', nameDe: 'SEO', nameRu: 'SEO', slug: 'seo' },
-    { name: 'PPC Advertising', nameEs: 'Publicidad PPC', nameDe: 'PPC‑Werbung', nameRu: 'PPC‑реклама', slug: 'ppc-advertising' },
-    { name: 'Social Media Marketing', nameEs: 'Marketing en redes sociales', nameDe: 'Social‑Media‑Marketing', nameRu: 'Маркетинг в соцсетях', slug: 'social-media-marketing' },
-    { name: 'Content Creation', nameEs: 'Creación de contenido', nameDe: 'Content‑Erstellung', nameRu: 'Контент‑маркетинг', slug: 'content-creation' },
+    { 
+      name: 'SEO', 
+      nameEs: 'SEO', 
+      nameDe: 'SEO', 
+      nameRu: 'SEO', 
+      slug: 'seo', 
+      subservices: [
+        { name: 'Overview', nameEs: 'Vista general', nameDe: 'Übersicht', nameRu: 'Обзор', slug: 'seo' },
+        { name: 'Comprehensive SEO', nameEs: 'SEO Integral', nameDe: 'Umfassendes SEO', nameRu: 'Комплексное SEO', slug: 'comprehensive-seo' },
+        { name: 'Local SEO', nameEs: 'SEO Local', nameDe: 'Lokales SEO', nameRu: 'Локальное SEO', slug: 'local-seo' },
+        { name: 'Technical SEO', nameEs: 'SEO Técnico', nameDe: 'Technisches SEO', nameRu: 'Техническое SEO', slug: 'technical-seo' },
+        { name: 'E-commerce SEO', nameEs: 'SEO para E-commerce', nameDe: 'E-Commerce SEO', nameRu: 'SEO для магазинов', slug: 'e-commerce-seo' },
+      ]
+    },
+    { 
+      name: 'PPC Advertising', 
+      nameEs: 'Publicidad PPC', 
+      nameDe: 'PPC‑Werbung', 
+      nameRu: 'PPC‑реклама', 
+      slug: 'ppc-advertising', 
+      subservices: [
+        { name: 'Overview', nameEs: 'Vista general', nameDe: 'Übersicht', nameRu: 'Обзор', slug: 'ppc-advertising' },
+        { name: 'Search Ads', nameEs: 'Anuncios de Búsqueda', nameDe: 'Suchanzeigen', nameRu: 'Поисковая реклама', slug: 'search-ads' },
+        { name: 'Shopping Ads', nameEs: 'Anuncios de Shopping', nameDe: 'Shopping-Anzeigen', nameRu: 'Торговая реклама', slug: 'shopping-ads' },
+        { name: 'Display & Social Ads', nameEs: 'Display y Redes Sociales', nameDe: 'Display & Social Ads', nameRu: 'Медийная реклама', slug: 'display-social-media-ads' },
+      ]
+    },
+    { 
+      name: 'Social Media', 
+      nameEs: 'Redes Sociales', 
+      nameDe: 'Social-Media', 
+      nameRu: 'Социальные сети', 
+      slug: 'social-media-marketing', 
+      subservices: [
+        { name: 'Overview', nameEs: 'Vista general', nameDe: 'Übersicht', nameRu: 'Обзор', slug: 'social-media-marketing' },
+        { name: 'Organic SMM', nameEs: 'SMM Orgánico', nameDe: 'Organisches SMM', nameRu: 'Органический SMM', slug: 'organic-smm' },
+        { name: 'SMM Content', nameEs: 'Contenido SMM', nameDe: 'SMM-Content-Erstellung', nameRu: 'Контент для SMM', slug: 'smm-content-creation' },
+        { name: 'Community Management', nameEs: 'Gestión de Comunidad', nameDe: 'Community-Management', nameRu: 'Комьюнити-менеджмент', slug: 'smm-community-management' },
+      ]
+    },
+    { 
+      name: 'Content Marketing', 
+      nameEs: 'Marketing de Contenidos', 
+      nameDe: 'Content-Marketing', 
+      nameRu: 'Контент-маркетинг', 
+      slug: 'content-creation', 
+      subservices: [
+        { name: 'Overview', nameEs: 'Vista general', nameDe: 'Übersicht', nameRu: 'Обзор', slug: 'content-creation' },
+        { name: 'Content Strategy', nameEs: 'Estrategia de Contenido', nameDe: 'Content-Strategie', nameRu: 'Стратегия контента', slug: 'content-strategy' },
+        { name: 'Content Localization', nameEs: 'Localización de Contenido', nameDe: 'Content-Lokalisierung', nameRu: 'Локализация контента', slug: 'content-localization' },
+        { name: 'Copywriting', nameEs: 'Copywriting', nameDe: 'Copywriting', nameRu: 'Копирайтинг', slug: 'copywriting' },
+        { name: 'Visual Production', nameEs: 'Producción Visual', nameDe: 'Visuelle Produktion', nameRu: 'Визуальный контент', slug: 'visual-content-production' },
+      ]
+    },
   ],
   company: [
-    { name: 'About Us', nameEs: 'Sobre nosotros', nameDe: 'Über uns', nameRu: 'О нас', anchor: '#why-choose-us' },
-    { name: 'Case Studies', nameEs: 'Casos', nameDe: 'Case Studies', nameRu: 'Кейсы', anchor: '#case-studies' },
+    { name: 'About Us', nameEs: 'Sobre nosotros', nameDe: 'Über uns', nameRu: 'О нас', path: '/about' },
+    { name: 'Case Studies', nameEs: 'Casos', nameDe: 'Case Studies', nameRu: 'Кейсы', path: '/case-studies' },
     { name: 'Blog', nameEs: 'Blog', nameDe: 'Blog', nameRu: 'Блог', path: '/blog' },
     { name: 'Contact', nameEs: 'Contacto', nameDe: 'Kontakt', nameRu: 'Контакты', anchor: '#contact-us' },
   ],
   legal: [
+    { name: 'Legal Notice', nameEs: 'Aviso Legal', nameDe: 'Impressum', nameRu: 'Правовая информация', path: '/impressum' },
     { name: 'Privacy Policy', nameEs: 'Política de privacidad', nameDe: 'Datenschutz', nameRu: 'Политика конфиденциальности', path: '/privacy' },
-    { name: 'Cookie Policy', nameEs: 'Política de cookies', nameDe: 'Cookie-Richtlinie', nameRu: 'Политика использования файлов cookie', path: '/cookies' },
+    { name: 'Cookie Policy', nameEs: 'Política de cookies', nameDe: 'Cookie-Richtlinie', nameRu: 'Файлы cookie', path: '/cookies' },
+    { name: 'Terms of Service', nameEs: 'Términos de servicio', nameDe: 'AGB', nameRu: 'Условия использования', path: '/terms' },
+    { name: 'AI Policy', nameEs: 'Política de IA', nameDe: 'KI-Richtlinie', nameRu: 'Политика использования ИИ', path: '/ai-policy' },
+    { name: 'Accessibility', nameEs: 'Accesibilidad', nameDe: 'Barrierefreiheit', nameRu: 'Доступность', path: '/accessibility' },
   ],
 };
 
@@ -58,11 +119,11 @@ const social = [
         ),
     },
     {
-        name: 'Twitter',
+        name: 'X',
         href: '#',
         icon: (props: React.SVGProps<SVGSVGElement>) => (
             <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
             </svg>
         ),
     },
@@ -94,7 +155,13 @@ export default function Footer() {
   const navigation = {
     services: navBase.services.map(s => ({
       name: isEs ? (s as any).nameEs : isDe ? (s as any).nameDe : isRu ? (s as any).nameRu : s.name,
-      href: `/${detectedLang}/services/${s.slug}`
+      href: `/${detectedLang}/services/${s.slug}`,
+      subservices: s.subservices
+        .filter(sub => sub.slug !== s.slug) // Remove "Overview" which points to the same slug as parent
+        .map(sub => ({
+          name: isEs ? (sub as any).nameEs : isDe ? (sub as any).nameDe : isRu ? (sub as any).nameRu : sub.name,
+          href: `/${detectedLang}/services/${sub.slug}`
+        }))
     })),
     company: navBase.company.map(c => {
       if ('path' in c && (c as any).path) {
@@ -110,14 +177,13 @@ export default function Footer() {
       href: `/${detectedLang}${(l as any).path || '#'}` 
     }))
   };
+
   return (
-    <footer className="bg-gray-900" aria-labelledby="footer-heading">
-      <h2 id="footer-heading" className="sr-only" suppressHydrationWarning>
-        Footer
-      </h2>
+    <footer className="bg-gray-900" aria-label="Footer">
       <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+          {/* Logo and Slogan Block */}
+          <div className="lg:col-span-4 space-y-8">
             <Link href={`/${detectedLang}`} className="inline-block">
               <Image
                   className="h-7 w-auto"
@@ -139,59 +205,90 @@ export default function Footer() {
               ))}
             </div>
           </div>
-          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-white" suppressHydrationWarning>{isEs ? 'Servicios' : isDe ? 'Services' : isRu ? 'Услуги' : 'Services'}</h3>
+
+          {/* 4 Columns of Services */}
+          <div className="lg:col-span-8 grid grid-cols-2 gap-8 sm:grid-cols-4">
+            {navigation.services.map((category) => (
+              <div key={category.name}>
+                <Link 
+                  href={category.href}
+                  className="text-sm font-semibold leading-6 text-white hover:text-gray-300 transition-colors"
+                  suppressHydrationWarning
+                >
+                  {category.name}
+                </Link>
                 <ul role="list" className="mt-6 space-y-4">
-                  {navigation.services.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-white" suppressHydrationWarning>{isEs ? 'Empresa' : isDe ? 'Company' : isRu ? 'Компания' : 'Company'}</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {navigation.company.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-white" suppressHydrationWarning>{isEs ? 'Legal' : isDe ? 'Legal' : isRu ? 'Правовая информация' : 'Legal'}</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {navigation.legal.map((item) => (
+                  {category.subservices.map((item) => (
                     <li key={item.name}>
                       <Link href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
                         {item.name}
                       </Link>
                     </li>
                   ))}
-                  <li>
-                    <button
-                      onClick={openCookieSettings}
-                      className="text-sm leading-6 text-gray-300 hover:text-white text-left"
-                    >
-                      {isEs ? 'Gestionar Cookies' : isDe ? 'Cookies verwalten' : isRu ? 'Управление файлами cookie' : 'Manage Cookies'}
-                    </button>
-                  </li>
                 </ul>
               </div>
-            </div>
+            ))}
           </div>
         </div>
-        <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
-          <p className="text-xs leading-5 text-gray-400">&copy; {new Date().getFullYear()} Qwantix Agency. {isEs ? 'Todos los derechos reservados.' : isDe ? 'All rights reserved.' : isRu ? 'Все права защищены.' : 'All rights reserved.'}</p>
+
+        {/* Second Row: About, Case Studies, Blog, Contact + Legal Dropdown */}
+        <div className="mt-16 border-t border-white/10 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="flex flex-wrap gap-x-8 gap-y-4">
+            {navigation.company.map((item) => (
+              <Link key={item.name} href={item.href} className="text-sm font-medium leading-6 text-gray-300 hover:text-white transition-colors">
+                {item.name}
+              </Link>
+            ))}
+          </div>
+
+          <div className="relative">
+            <Disclosure>
+              {({ open }) => (
+                <>
+                  <Disclosure.Button className="flex items-center gap-2 text-sm font-semibold leading-6 text-white hover:text-gray-300 transition-colors focus:outline-none">
+                    <span>{isEs ? 'Legal' : isDe ? 'Rechtliches' : isRu ? 'Правовая информация' : 'Legal'}</span>
+                    <ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+                  </Disclosure.Button>
+                  
+                  <Transition
+                    enter="transition duration-200 ease-out"
+                    enterFrom="transform scale-95 opacity-0 translate-y-2"
+                    enterTo="transform scale-100 opacity-100 translate-y-0"
+                    leave="transition duration-150 ease-in"
+                    leaveFrom="transform scale-100 opacity-100 translate-y-0"
+                    leaveTo="transform scale-95 opacity-0 translate-y-2"
+                  >
+                    <Disclosure.Panel className="absolute bottom-full right-0 mb-4 w-56 overflow-hidden rounded-xl bg-gray-800 border border-white/10 shadow-2xl z-50">
+                      <div className="p-2 space-y-1">
+                        {navigation.legal.map((item) => (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            className="block rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
+                        <button
+                          onClick={openCookieSettings}
+                          className="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                        >
+                          {isEs ? 'Gestionar Cookies' : isDe ? 'Cookies verwalten' : isRu ? 'Файлы cookie' : 'Manage Cookies'}
+                        </button>
+                      </div>
+                    </Disclosure.Panel>
+                  </Transition>
+                </>
+              )}
+            </Disclosure>
+          </div>
+        </div>
+
+        {/* Bottom Copyright */}
+        <div className="mt-8">
+          <p className="text-xs leading-5 text-gray-400">
+            &copy; 2025 Qwantix Agency. {isEs ? 'Todos los derechos reservados.' : isDe ? 'Alle Rechte vorbehalten.' : isRu ? 'Все права защищены.' : 'All rights reserved.'}
+          </p>
         </div>
       </div>
     </footer>

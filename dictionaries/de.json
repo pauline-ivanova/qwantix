@@ -1,2 +1,58 @@
-{}
-
+{
+  "about": {
+    "meta": {
+      "title": "Über Qwantix: Strategiegesteuertes digitales Marketing",
+      "description": "Erfahren Sie mehr über Qwantix, unsere SEO-fokussierte Wachstumsphilosophie und unser Engagement für den Aufbau nachhaltiger Marketingsysteme."
+    },
+    "hero": {
+      "title": "Strategiegesteuertes digitales Marketing: Suche, Struktur und messbare Ergebnisse",
+      "subtitle": "Qwantix ist eine Beratung für digitales Marketing, bei der SEO-gesteuerte Strategie im Mittelpunkt aller Wachсtumsentscheidungen steht. Wir helfen Unternehmen, Sichtbarkeit, Nachfrage und Konversion zu verbessern.",
+      "buttonText": "Kontakt aufnehmen"
+    },
+    "principles": {
+      "title": "Wie wir über digitales Wachstum denken",
+      "description": "Digitales Marketing funktioniert am besten als System, nicht als Ansammlung von Dienstleistungen. Wir beginnen nicht mit Kanälen oder Tools; wir beginnen damit, zu verstehen, wie Nutzer suchen, wie Nachfrage erfasst wird und wie eine Website strukturiert ist, um diese Reise zu unterstützen.",
+      "items": [
+        { "name": "Suche als Fundament", "description": "SEO informiert Struktur, Inhalt und Intention – und unterstützt smartere Entscheidungen über bezahlte und organische Kanäle hinweg." },
+        { "name": "Struktur vor Skalierung", "description": "Wachstum funktioniert nur, wenn die Website-Architektur, die Rollen der Seiten und die interne Logik klar definiert sind." },
+        { "name": "Intention vor Volumen", "description": "Traffic zählt nur, wenn er die reale Nachfrage widerspiegelt und die Geschäftsziele unterstützt." },
+        { "name": "EEAT im System verankert", "description": "Vertrauen, Expertise und Autorität werden durch Content-Hierarchie, Autorenschaft, interne Verlinkung und technische Entscheidungen aufgebaut." }
+      ]
+    },
+    "work": {
+      "title": "Woran wir arbeiten",
+      "description": "Qwantix unterstützt in der Regel Projekte, bei denen digitale Entscheidungen direkte Auswirkungen auf Umsatz, Vertrauen oder Skalierbarkeit haben.",
+      "items": [
+        "SEO-gesteuerte Website-Neuerstellungen und Migrationen",
+        "Lokales und servicebasiertes SEO in wettbewerbsintensiven Märkten",
+        "Enterprise- und Multi-Market-SEO-Strategie",
+        "EEAT-fokussierte Optimierung für regulierte oder Branchen mit hohem Vertrauensbedarf",
+        "Content- und semantische Frameworks für skalierbares Wachstum",
+        "Mehrsprachiges und lokalisierungsgesteuertes SEO für die Märkte UK, USA und EU"
+      ]
+    },
+    "consultant": {
+      "title": "Über den Berater hinter Qwantix",
+      "description": "Qwantix wird von einem mehrsprachigen Berater für digitales Marketing mit Hintergrund in den Bereichen Recht, regulierte Branchen und internationale Digitalstrategie geleitet.",
+      "background": [
+        "Sicherer Umgang mit compliance-lastigen und Hochrisiko-Nischen",
+        "Erfahrung bei der Übersetzung komplexer Expertise in Suchnachfrage",
+        "Fließend in den Märkten Englisch, Spanisch, Deutsch und Russisch",
+        "Fähigkeit, Marketingentscheidungen mit rechtlichen, medizinischen und operativen Einschränkungen in Einklang zu bringen"
+      ]
+    },
+    "howWeWork": {
+      "eyebrow": "Unsere Philosophie",
+      "title": "Wie wir mit Kunden arbeiten",
+      "description": "Wir verkaufen keine festen Pakete oder generischen Retainer. Wir konzentrieren uns auf den Aufbau nachhaltiger Wachstumsmodelle – nicht auf isolierte Taktiken.",
+      "itemsTitle": "Qwantix arbeitet am besten mit Teams zusammen, die:",
+      "items": [
+        "Strategische Klarheit über schnelle Erfolge stellen",
+        "In wettbewerbsintensiven oder komplexen Umgebungen agieren",
+        "Struktur, Priorisierung und langfristige Ausrichtung benötigen",
+        "Digitale Marketingentscheidungen wünschen, die auf Suche und Analyse basieren"
+      ],
+      "additionalInfo": "Die meisten Kooperationen beginnen mit einer gezielten strategischen Überprüfung oder einem klar definierten Projekt, anstatt einer unbefristeten Zusammenarbeit."
+    }
+  }
+}

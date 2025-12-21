@@ -10,7 +10,7 @@ export default function CTA({ lang = 'en' }: { lang?: string }) {
   const isRu = lang === 'ru';
   const ru = (ruDict as any)?.home?.cta;
   return (
-    <div className="bg-white dark:bg-[#061423] py-16 sm:py-24">
+    <div className="bg-white dark:bg-[#061423] py-16 sm:py-24" suppressHydrationWarning>
       <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="relative isolate overflow-hidden bg-gradient-to-r from-indigo-700 to-purple-700 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
           <div className="absolute inset-0 pointer-events-none">

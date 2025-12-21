@@ -8,15 +8,37 @@ import ScrollProgressBar from "@/app/components/common/ScrollProgressBar";
 import { ThemeWrapper } from "@/app/components/ThemeWrapper";
 import { Metadata } from "next";
 import DeferredComponents from "@/app/components/layout/DeferredComponents";
+import HtmlLangSetter from "@/app/components/common/HtmlLangSetter";
+import GoogleTagManager from "@/app/components/analytics/GoogleTagManager";
+import ScrollDepthTracker from "@/app/components/analytics/ScrollDepthTracker";
+import CoreWebVitals from "@/app/components/analytics/CoreWebVitals";
+import SchemaOrg from "@/app/components/common/SchemaOrg";
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
 }
 
-export const metadata: Metadata = {
-  title: "Qwantix: Digital Marketing Powered by Analytics",
-  description: "Grow your business with digital marketing powered by analytics",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> | { lang: string } }): Promise<Metadata> {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const lang = i18n.locales.includes(resolvedParams.lang as Locale) ? (resolvedParams.lang as Locale) : i18n.defaultLocale;
+  
+  return {
+    title: "Qwantix: Digital Marketing Powered by Analytics",
+    description: "Grow your business with digital marketing powered by analytics",
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.png", type: "image/png" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/favicon.png",
+    },
+    // Set HTML lang attribute for better SEO
+    other: {
+      'html-lang': lang,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -31,10 +53,16 @@ export default async function RootLayout({
 
   return (
     <ThemeWrapper>
+      <GoogleTagManager />
+      <ScrollDepthTracker />
+      <CoreWebVitals />
+      <HtmlLangSetter />
+      <SchemaOrg lang={lang} type="Organization" />
+      <SchemaOrg lang={lang} type="WebPage" />
       <ScrollProgressBar />
       <Header />
       <DotNav />
-      <main className="bg-white dark:bg-gray-900">
+      <main className="bg-white dark:bg-gray-900" suppressHydrationWarning>
         {children}
       </main>
       <Footer />

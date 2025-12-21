@@ -1,7 +1,8 @@
 'use client'
 
+import React, { useEffect } from 'react';
 import { MDXRemote } from 'next-mdx-remote';
-import { mdxComponents } from './CustomComponents';
+import { mdxComponents, resetHeadingIdTracker } from './CustomComponents';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 interface MDXContentProps {
@@ -9,8 +10,11 @@ interface MDXContentProps {
 }
 
 export default function MDXContent({ source }: MDXContentProps) {
-  // Explicitly pass props instead of using spread operator to avoid serialization issues
-  // Only pass scope if it exists to avoid undefined issues
+  // Reset heading ID tracker before rendering
+  React.useMemo(() => {
+    resetHeadingIdTracker();
+  }, [source.compiledSource]);
+
   return (
     <MDXRemote 
       compiledSource={source.compiledSource}

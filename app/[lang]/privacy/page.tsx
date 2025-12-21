@@ -413,7 +413,7 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
   const lang = resolvedParams.lang;
   const currentLang = i18n.locales.includes(lang as any) ? lang : 'en';
   const contentLang = content[currentLang as keyof typeof content] || content.en;
-  const currentDate = new Date();
+  const currentDate = new Date('2025-12-21T12:00:00Z');
   const lastUpdated = currentDate.toLocaleDateString(
     currentLang === 'es' ? 'es-ES' : currentLang === 'de' ? 'de-DE' : currentLang === 'ru' ? 'ru-RU' : 'en-US',
     { 
@@ -424,17 +424,34 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
   );
 
   return (
-    <div className="container mx-auto px-4 py-16 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-          {contentLang.title}
-        </h1>
-        <p className="text-gray-600">
-          {contentLang.lastUpdated}: {lastUpdated}
-        </p>
+    <>
+      {/* Hero Section */}
+      <div className="relative isolate bg-gradient-to-b from-[#635bff] to-indigo-800 py-24 sm:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,27,75,0.4),transparent_50%)]" />
+        <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            {contentLang.title}
+          </h1>
+          <p className="mt-6 text-lg leading-8 text-indigo-100">
+            {contentLang.lastUpdated}: {lastUpdated}
+          </p>
+        </div>
+        <div
+          className="absolute bottom-0 left-0 w-full h-20"
+          style={{ transform: 'translateY(1px)' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full h-full" preserveAspectRatio="none">
+            <path
+              fill="#ffffff"
+              fillOpacity="1"
+              d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,186.7C960,213,1056,235,1152,218.7C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            ></path>
+          </svg>
+        </div>
       </div>
 
-      <div className="prose prose-lg max-w-none">
+      <div className="container mx-auto px-4 py-16 max-w-4xl">
+        <div className="prose prose-lg max-w-none">
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center gap-2">
             <ShieldCheckIcon className="w-6 h-6 text-indigo-600" />
@@ -515,8 +532,8 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
           </ul>
           <p className="mt-4">
             {contentLang.yourRights.p2}{' '}
-            <a href="mailto:info@qwantix.com" className="text-indigo-600 hover:underline">
-              info@qwantix.com
+            <a href="mailto:info@qwantix.agency" className="text-indigo-600 hover:underline">
+              info@qwantix.agency
             </a>
           </p>
         </section>
@@ -538,11 +555,12 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
           </h2>
           <p>{contentLang.contact.p1}</p>
           <ul>
-            <li><strong>{contentLang.contact.email}</strong> <a href="mailto:info@qwantix.com" className="text-indigo-600 hover:underline">info@qwantix.com</a></li>
-            <li><strong>{contentLang.contact.address}</strong> Qwantix Agency</li>
+            <li><strong>{contentLang.contact.email}</strong> <a href="mailto:info@qwantix.agency" className="text-indigo-600 hover:underline">info@qwantix.agency</a></li>
+            <li><strong>{contentLang.contact.address}</strong> Polina Ivanova, 3F Commutation Plaza, London Road, Liverpool L3 8HR, United Kingdom</li>
           </ul>
         </section>
       </div>
     </div>
-  );
+  </>
+);
 }

@@ -205,17 +205,27 @@ export default function IndustrySolutions({ lang = 'en' }: { lang?: string }) {
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
           <dl className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-4">
-            {(isRu && Array.isArray(ru?.items) ? (ru!.items as any[]).map((it, idx) => ({...industries[idx], name: it.name ?? industries[idx]?.name, description: it.description ?? industries[idx]?.description })) : industries).map((industry) => (
-              <div key={industry.name} className="flex flex-col">
-                  <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                      <industry.icon className="h-8 w-8 flex-none text-indigo-600 dark:text-indigo-200" aria-hidden="true" />
-                      <h3 suppressHydrationWarning>{industry.name}</h3>
-                  </dt>
-                  <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-100">
-                      <p className="flex-auto">{industry.description}</p>
-                  </dd>
-              </div>
-            ))}
+            {(() => {
+              const items = (isRu && Array.isArray(ru?.items)) 
+                ? (ru.items as any[]).map((it, idx) => ({
+                    ...industries[idx],
+                    name: it.name ?? industries[idx]?.name,
+                    description: it.description ?? industries[idx]?.description 
+                  }))
+                : industries;
+              
+              return items.map((industry) => (
+                <div key={industry.name} className="flex flex-col" suppressHydrationWarning>
+                    <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
+                        <industry.icon className="h-8 w-8 flex-none text-indigo-600 dark:text-indigo-200" aria-hidden="true" />
+                        <h3 suppressHydrationWarning>{industry.name}</h3>
+                    </dt>
+                    <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-100">
+                        <p className="flex-auto">{industry.description}</p>
+                    </dd>
+                </div>
+              ));
+            })()}
           </dl>
           {/* We might add a button here later if needed */}
         </div>

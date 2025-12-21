@@ -10,6 +10,37 @@ import path from 'path';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
 
+// Fixed date for all metadata as requested by the user: December 21, 2025
+const FIXED_DATE = new Date('2025-12-21T12:00:00Z');
+
+/**
+ * Maps language codes to regional variants for hreflang
+ * This helps with regional SEO targeting (Spain, Germany, UK)
+ */
+const languageToRegional: Record<string, string> = {
+  en: 'en-GB', // UK English for regional targeting
+  de: 'de-DE', // Germany
+  es: 'es-ES', // Spain
+  ru: 'ru-RU', // Russia
+};
+
+/**
+ * Helper to add regional hreflang variants to alternates
+ */
+function addRegionalAlternates(alternates: Record<string, string>): Record<string, string> {
+  const result = { ...alternates };
+  
+  // Add regional variants for each language
+  Object.entries(alternates).forEach(([lang, url]) => {
+    const regional = languageToRegional[lang];
+    if (regional) {
+      result[regional] = url;
+    }
+  });
+  
+  return result;
+}
+
 export interface SitemapUrl {
   url: string;
   lastModified?: Date | string;
@@ -18,18 +49,6 @@ export interface SitemapUrl {
   alternates?: {
     languages: Record<string, string>;
   };
-}
-
-/**
- * Get file modification time
- */
-function getFileModTime(filePath: string): Date | null {
-  try {
-    const stats = fs.statSync(filePath);
-    return stats.mtime;
-  } catch {
-    return null;
-  }
 }
 
 /**
@@ -44,13 +63,16 @@ export function getMainPageUrls(): SitemapUrl[] {
       alternates[altLang] = `${baseUrl}/${altLang}`;
     });
 
+    // Add regional variants for better regional SEO
+    const alternatesWithRegional = addRegionalAlternates(alternates);
+
     urls.push({
       url: `${baseUrl}/${lang}`,
-      lastModified: new Date(),
+      lastModified: FIXED_DATE,
       changeFrequency: 'daily',
       priority: 1.0,
       alternates: {
-        languages: alternates,
+        languages: alternatesWithRegional,
       },
     });
   });
@@ -64,7 +86,6 @@ export function getMainPageUrls(): SitemapUrl[] {
 export function getServiceUrls(): SitemapUrl[] {
   const urls: SitemapUrl[] = [];
   const paths = getAllServiceSlugs();
-  const servicesDirectory = path.join(process.cwd(), 'content', 'services');
 
   // Group by slug to get all languages for each service
   const servicesBySlug = new Map<string, { lang: string; slug: string }[]>();
@@ -82,21 +103,21 @@ export function getServiceUrls(): SitemapUrl[] {
     const serviceLangs = langs.map((l) => l.lang);
     
     serviceLangs.forEach((lang) => {
-      const filePath = path.join(servicesDirectory, lang, `${slug}.mdx`);
-      const lastModified = getFileModTime(filePath);
-
       const alternates: Record<string, string> = {};
       serviceLangs.forEach((altLang) => {
         alternates[altLang] = `${baseUrl}/${altLang}/services/${slug}`;
       });
 
+      // Add regional variants for better regional SEO
+      const alternatesWithRegional = addRegionalAlternates(alternates);
+
       urls.push({
         url: `${baseUrl}/${lang}/services/${slug}`,
-        lastModified: lastModified || new Date(),
+        lastModified: FIXED_DATE,
         changeFrequency: 'weekly',
         priority: 0.8,
         alternates: {
-          languages: alternates,
+          languages: alternatesWithRegional,
         },
       });
     });
@@ -110,7 +131,6 @@ export function getServiceUrls(): SitemapUrl[] {
  */
 export function getBlogUrls(): SitemapUrl[] {
   const urls: SitemapUrl[] = [];
-  const postsDirectory = path.join(process.cwd(), 'content', 'blog');
 
   // Get all blog posts by language
   const postsBySlug = new Map<string, { lang: string; slug: string }[]>();
@@ -128,21 +148,21 @@ export function getBlogUrls(): SitemapUrl[] {
 
   postsBySlug.forEach((langs, slug) => {
     langs.forEach(({ lang }) => {
-      const filePath = path.join(postsDirectory, lang, `${slug}.mdx`);
-      const lastModified = getFileModTime(filePath);
-
       const alternates: Record<string, string> = {};
       langs.forEach(({ lang: altLang }) => {
         alternates[altLang] = `${baseUrl}/${altLang}/blog/${slug}`;
       });
 
+      // Add regional variants for better regional SEO
+      const alternatesWithRegional = addRegionalAlternates(alternates);
+
       urls.push({
         url: `${baseUrl}/${lang}/blog/${slug}`,
-        lastModified: lastModified || new Date(),
+        lastModified: FIXED_DATE,
         changeFrequency: 'monthly',
         priority: 0.6,
         alternates: {
-          languages: alternates,
+          languages: alternatesWithRegional,
         },
       });
     });
@@ -156,7 +176,7 @@ export function getBlogUrls(): SitemapUrl[] {
  */
 export function getLegalUrls(): SitemapUrl[] {
   const urls: SitemapUrl[] = [];
-  const legalPages = ['privacy', 'cookies'];
+  const legalPages = ['privacy', 'cookies', 'impressum', 'terms', 'ai-policy', 'accessibility'];
 
   legalPages.forEach((page) => {
     const alternates: Record<string, string> = {};
@@ -164,14 +184,17 @@ export function getLegalUrls(): SitemapUrl[] {
       alternates[lang] = `${baseUrl}/${lang}/${page}`;
     });
 
+    // Add regional variants for better regional SEO
+    const alternatesWithRegional = addRegionalAlternates(alternates);
+
     i18n.locales.forEach((lang) => {
       urls.push({
         url: `${baseUrl}/${lang}/${page}`,
-        lastModified: new Date(),
+        lastModified: FIXED_DATE,
         changeFrequency: 'monthly',
         priority: 0.3,
         alternates: {
-          languages: alternates,
+          languages: alternatesWithRegional,
         },
       });
     });
@@ -184,7 +207,7 @@ export function getLegalUrls(): SitemapUrl[] {
  * Format date for XML sitemap
  */
 export function formatDate(date: Date | string | null | undefined): string {
-  if (!date) return new Date().toISOString();
+  if (!date) return FIXED_DATE.toISOString();
   const d = typeof date === 'string' ? new Date(date) : date;
   return d.toISOString();
 }
@@ -225,7 +248,7 @@ ${urlEntries.join('\n')}
  */
 export function generateSitemapIndex(sitemaps: Array<{ loc: string; lastmod?: Date | string }>): string {
   const sitemapEntries = sitemaps.map((sitemap) => {
-    const lastmod = sitemap.lastmod ? `    <lastmod>${formatDate(sitemap.lastmod)}</lastmod>` : '';
+    const lastmod = `    <lastmod>${formatDate(FIXED_DATE)}</lastmod>`;
     return `  <sitemap>
     <loc>${sitemap.loc}</loc>${lastmod ? '\n' + lastmod : ''}
   </sitemap>`;

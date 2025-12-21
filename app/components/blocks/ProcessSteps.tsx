@@ -2,6 +2,7 @@ import {
     ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { getCategoryColors } from '@/lib/category-colors';
 
 interface Step {
     name: string;
@@ -13,17 +14,34 @@ interface ProcessStepsProps {
     title: string;
     description: string;
     steps: Step[];
+    category?: string;
     conclusion?: string;
     padding?: 'default' | 'top-compact';
     buttonText?: string;
 }
 
-const ProcessSteps: React.FC<ProcessStepsProps> = ({ title, description, steps, conclusion, padding = 'default', buttonText }) => {
+const ProcessSteps = ({ 
+    title, 
+    description, 
+    steps, 
+    category = 'default',
+    conclusion, 
+    padding = 'default', 
+    buttonText 
+}: ProcessStepsProps) => {
+    const colors = getCategoryColors(category);
     const paddingClasses = padding === 'top-compact'
     ? 'pt-16 sm:pt-24 pb-24 sm:pb-32'
     : 'py-24 sm:py-32';
+    // Generate section ID from title - handle special characters and colons
+    const sectionId = title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
     return (
-        <div className={`bg-gray-50 dark:bg-gray-900 ${paddingClasses}`}>
+        <div id={sectionId} data-section-id={sectionId} data-section-title={title} className={`bg-gray-50 dark:bg-gray-900 ${paddingClasses}`} suppressHydrationWarning>
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl lg:text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl" suppressHydrationWarning>{title}</h2>
@@ -39,7 +57,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ title, description, steps, 
                                 <div key={step.name} className={`relative ${Icon ? 'pl-16' : ''}`}>
                                     <dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
                                         {Icon && (
-                                            <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
+                                            <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg shadow-sm" style={{ backgroundColor: colors.borderAccentColor }} suppressHydrationWarning>
                                                 <Icon className="h-6 w-6 text-white" aria-hidden="true" />
                                             </div>
                                         )}
@@ -61,7 +79,9 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ title, description, steps, 
                 <div className={`flex items-center justify-center gap-x-6 ${conclusion ? 'mt-10' : 'mt-16'}`}>
                     <a
                         href="#"
-                        className="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="group relative inline-flex items-center justify-center overflow-hidden rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-all duration-300"
+                        style={{ backgroundColor: colors.borderAccentColor }}
+                        suppressHydrationWarning
                     >
                         <span className="transition-transform duration-300 group-hover:-translate-x-4">
                             {buttonText || 'Discuss Your Project'}

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { slugify } from '@/lib/toc-parser';
 
@@ -20,8 +22,11 @@ function extractText(children: React.ReactNode): string {
   if (Array.isArray(children)) {
     return children.map(extractText).join('');
   }
-  if (React.isValidElement(children) && children.props.children) {
-    return extractText(children.props.children);
+  if (React.isValidElement(children)) {
+    const element = children as React.ReactElement<{ children?: React.ReactNode }>;
+    if (element.props.children) {
+      return extractText(element.props.children);
+    }
   }
   return '';
 }
@@ -96,7 +101,7 @@ function H4(props: React.ComponentProps<'h4'>) {
 
 function P(props: React.ComponentProps<'p'>) {
   return (
-    <p className="text-lg leading-8 text-gray-600 dark:text-gray-300">
+    <p className="text-lg leading-8 text-gray-600 dark:text-gray-300 mb-6">
       {props.children}
     </p>
   );
@@ -104,17 +109,62 @@ function P(props: React.ComponentProps<'p'>) {
 
 function UL(props: React.ComponentProps<'ul'>) {
   return (
-    <ul className="list-disc space-y-2 pl-6">
+    <ul className="list-disc space-y-3 pl-6 mb-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
       {props.children}
     </ul>
   );
 }
 
+function OL(props: React.ComponentProps<'ol'>) {
+  return (
+    <ol className="list-decimal space-y-3 pl-6 mb-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+      {props.children}
+    </ol>
+  );
+}
+
 function LI(props: React.ComponentProps<'li'>) {
   return (
-    <li className="text-lg leading-8 text-gray-600 dark:text-gray-300 pl-2">
+    <li className="pl-2">
       {props.children}
     </li>
+  );
+}
+
+function Strong(props: React.ComponentProps<'strong'>) {
+  return (
+    <strong className="font-semibold text-gray-900 dark:text-white">
+      {props.children}
+    </strong>
+  );
+}
+
+function Em(props: React.ComponentProps<'em'>) {
+  return (
+    <em className="italic">
+      {props.children}
+    </em>
+  );
+}
+
+function A(props: React.ComponentProps<'a'>) {
+  return (
+    <a 
+      href={props.href} 
+      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 underline"
+      {...(props.target && { target: props.target })}
+      {...(props.rel && { rel: props.rel })}
+    >
+      {props.children}
+    </a>
+  );
+}
+
+function Blockquote(props: React.ComponentProps<'blockquote'>) {
+  return (
+    <blockquote className="border-l-4 border-indigo-600 dark:border-indigo-400 pl-4 italic text-gray-700 dark:text-gray-300 my-6">
+      {props.children}
+    </blockquote>
   );
 }
 
@@ -125,5 +175,10 @@ export const mdxComponents = {
   h4: H4,
   p: P,
   ul: UL,
+  ol: OL,
   li: LI,
+  strong: Strong,
+  em: Em,
+  a: A,
+  blockquote: Blockquote,
 };

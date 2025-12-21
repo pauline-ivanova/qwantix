@@ -7,7 +7,7 @@ interface HeroProps {
   buttonText: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ title, subtitle, buttonText }) => {
+const Hero = ({ title, subtitle, buttonText }: HeroProps) => {
   return (
       <div className="relative bg-gray-900 pt-14 isolate overflow-hidden">
       <AuroraBackground />

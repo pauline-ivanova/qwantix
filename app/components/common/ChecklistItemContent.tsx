@@ -33,8 +33,9 @@ export default function ChecklistItemContent({ children }: ChecklistItemContentP
       if (typeof node === 'string') return node;
       if (typeof node === 'number') return String(node);
       if (React.isValidElement(node)) {
-        if (node.props?.children) {
-          return getAllText(React.Children.toArray(node.props.children));
+        const element = node as React.ReactElement<{ children?: React.ReactNode }>;
+        if (element.props?.children) {
+          return getAllText(React.Children.toArray(element.props.children));
         }
       }
       return '';
@@ -55,12 +56,13 @@ export default function ChecklistItemContent({ children }: ChecklistItemContentP
     }
     
     if (React.isValidElement(child)) {
-      const childText = getAllText([child]);
+      const element = child as React.ReactElement<{ children?: React.ReactNode }>;
+      const childText = getAllText([element]);
       
       if (childText.includes(':')) {
         // Colon inside the element
-        if (child.props?.children) {
-          const innerChildren = React.Children.toArray(child.props.children);
+        if (element.props?.children) {
+          const innerChildren = React.Children.toArray(element.props.children);
           const innerText = getAllText(innerChildren);
           const colonIndex = innerText.indexOf(':');
           

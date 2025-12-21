@@ -1,0 +1,18 @@
+# robots.txt for Qwantix Agency
+# Optimized for regional SEO targeting (Spain, Germany, UK)
+
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow sitemaps
+Sitemap: https://qwantix.com/sitemap.xml
+Sitemap: https://qwantix.com/sitemap_index.xml
+Sitemap: https://qwantix.com/sitemap-images.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

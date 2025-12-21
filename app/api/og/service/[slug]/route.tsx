@@ -1,5 +1,6 @@
 import { ImageResponse } from '@vercel/og';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeSlug, checkRateLimit, getClientIp } from '@/lib/security';
 
 // Use edge runtime for @vercel/og
 export const runtime = 'edge';
@@ -20,12 +21,20 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> | { slug: string } }
 ) {
   try {
-    // Handle params - in Next.js 14, params can be a Promise
+    // Rate limiting: 30 OG image requests per minute per IP
+    const ip = getClientIp(request);
+    const { success } = checkRateLimit(ip, { limit: 30, windowMs: 60 * 1000 });
+    
+    if (!success) {
+      return new Response('Too many requests', { status: 429 });
+    }
+
+    // Handle params
     const resolvedParams = params instanceof Promise ? await params : params;
-    const slug = resolvedParams.slug;
+    const slug = sanitizeSlug(resolvedParams.slug);
     
     if (!slug) {
-      return new Response('Slug is required', { status: 400 });
+      return new Response('Valid slug is required', { status: 400 });
     }
     
     // Get language from query params

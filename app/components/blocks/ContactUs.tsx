@@ -1,11 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Script from 'next/script';
+import { sanitizeString } from '@/lib/security';
+
+declare global {
+  interface Window {
+    turnstile: any;
+  }
+}
 
 export default function ContactUs({ lang = 'en' }: { lang?: string }) {
   const isEs = lang === 'es';
   const isDe = lang === 'de';
   const isRu = lang === 'ru';
+  
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -14,8 +23,38 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
     message: '',
   });
 
+  const [honeypot, setHoneypot] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<string | null>(null);
+
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+  useEffect(() => {
+    // Cleanup widget on unmount
+    return () => {
+      if (widgetId.current && window.turnstile) {
+        window.turnstile.remove(widgetId.current);
+      }
+    };
+  }, []);
+
+  const onTurnstileLoad = () => {
+    if (turnstileRef.current && window.turnstile && !widgetId.current) {
+      widgetId.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: turnstileSiteKey || '1x00000000000000000000AA', // Testing key if not provided
+        callback: (token: string) => setTurnstileToken(token),
+        'expired-callback': () => setTurnstileToken(null),
+        'error-callback': () => setTurnstileToken(null),
+        theme: 'dark',
+      });
+    }
+  };
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
@@ -43,23 +82,60 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      console.log('Form submitted:', formData);
-      // Here you would typically send the data to a server
-      alert(isEs ? '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.' : isDe ? 'Vielen Dank für Ihre Nachricht! Wir melden uns in Kürze.' : isRu ? 'Спасибо! Мы свяжемся с вами в ближайшее время.' : 'Thank you for your message! We will get back to you shortly.');
-      setFormData({ name: '', company: '', email: '', phoneNumber: '', message: '' });
-      setPrivacyConsent(false);
-      setErrors({});
+      return;
+    }
+
+    if (turnstileSiteKey && !turnstileToken) {
+      setErrors({ turnstile: isRu ? 'Пожалуйста, подтвердите, что вы не робот.' : 'Please complete the security check.' });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          honeypot,
+          turnstileToken,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', company: '', email: '', phoneNumber: '', message: '' });
+        setPrivacyConsent(false);
+        setErrors({});
+        // Reset turnstile
+        if (widgetId.current && window.turnstile) {
+          window.turnstile.reset(widgetId.current);
+        }
+      } else {
+        setSubmitStatus('error');
+        setErrors({ server: result.error || (isRu ? 'Произошла ошибка при отправке.' : 'Something went wrong.') });
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrors({ server: isRu ? 'Ошибка сети. Попробуйте позже.' : 'Network error. Please try again later.' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="bg-gray-900 py-24 sm:py-32">
+    <div className="bg-gray-900 py-24 sm:py-32" suppressHydrationWarning>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl no-hyphen-break" suppressHydrationWarning>{isEs ? 'Hablemos de tu proyecto' : isDe ? 'Sprechen wir über Ihr Projekt' : isRu ? 'Обсудим ваш проект' : "Let's Talk About Your Project"}</h2>
@@ -210,24 +286,82 @@ export default function ContactUs({ lang = 'en' }: { lang?: string }) {
               </div>
             </div>
           </div>
-          <div className="mt-8 flex justify-end">
-            <button
-              type="submit"
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-indigo-600 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <span className="transition-transform duration-300 group-hover:-translate-x-3">{isEs ? 'Enviar mensaje' : isDe ? 'Nachricht senden' : isRu ? 'Отправить сообщение' : 'Send Message'}</span>
-              <span
-                aria-hidden="true"
-                className="absolute right-4 translate-x-10 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+          <div className="mt-8 flex flex-col gap-4">
+            {/* Honeypot field - hidden from users */}
+            <div className="hidden" aria-hidden="true">
+              <input
+                type="text"
+                name="hp_field"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            {/* Turnstile widget */}
+            {turnstileSiteKey && (
+              <div className="flex justify-center sm:justify-end">
+                <div ref={turnstileRef} />
+              </div>
+            )}
+            {errors.turnstile && (
+              <p className="text-right text-sm text-red-500">{errors.turnstile}</p>
+            )}
+
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="rounded-md bg-green-500/10 p-4 ring-1 ring-inset ring-green-500/20">
+                <p className="text-sm font-medium text-green-400">
+                  {isRu ? 'Спасибо! Ваше сообщение успешно отправлено.' : isEs ? '¡Gracias! Tu mensaje ha sido enviado con éxito.' : isDe ? 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.' : 'Thank you! Your message has been sent successfully.'}
+                </p>
+              </div>
+            )}
+            {errors.server && (
+              <div className="rounded-md bg-red-500/10 p-4 ring-1 ring-inset ring-red-500/20">
+                <p className="text-sm font-medium text-red-400">{errors.server}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-indigo-600 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                  isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
               >
-                &gt;
-              </span>
-            </button>
+                <span className={`${isSubmitting ? 'opacity-0' : 'transition-transform duration-300 group-hover:-translate-x-3'}`}>
+                  {isEs ? 'Enviar mensaje' : isDe ? 'Nachricht senden' : isRu ? 'Отправить сообщение' : 'Send Message'}
+                </span>
+                {!isSubmitting && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-4 translate-x-10 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                  >
+                    &gt;
+                  </span>
+                )}
+                {isSubmitting && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
           <p className="mt-4 text-center text-sm leading-6 text-gray-300">
             {isEs ? 'Respetamos tu privacidad y nunca compartiremos tus datos con terceros.' : isDe ? 'Wir respektieren Ihre Privatsphäre und geben Ihre Daten niemals an Dritte weiter.' : isRu ? 'Мы уважаем вашу конфиденциальность и не передаём данные третьим лицам.' : 'We respect your privacy and will never share your details with third parties.'}
           </p>
         </form>
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          onLoad={onTurnstileLoad}
+          strategy="afterInteractive"
+        />
       </div>
     </div>
   )

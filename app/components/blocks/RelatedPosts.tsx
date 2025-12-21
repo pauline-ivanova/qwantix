@@ -1,34 +1,64 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getPostsByCategory, getAllPosts } from '@/lib/posts';
+import { findRelatedContent, extractKeywords } from '@/lib/internal-linking';
+import { getCategoryColors } from '@/lib/category-colors';
+
+interface Post {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  author?: string;
+  date?: string;
+}
 
 interface RelatedPostsProps {
   lang: string;
   category: string;
   currentSlug?: string; // Exclude current post
+  currentTitle?: string; // For better keyword matching
+  currentExcerpt?: string; // For better keyword matching
 }
 
-const categoryColors: { [key: string]: string } = {
-  'SEO': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-200',
-  'PPC': 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-200',
-  'Content': 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-200',
-  'Content Creation': 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-200',
-  'Social Media Marketing': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
-  'SMM': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
-};
-
-const RelatedPosts = ({ lang, category, currentSlug }: RelatedPostsProps) => {
-  // Get posts by category, exclude current post, and limit to 3
-  let relatedPosts = getPostsByCategory(lang, category)
-    .filter(post => post.slug !== currentSlug)
-    .slice(0, 3);
-
-  // If we don't have enough posts in the same category, fill with other posts
+const RelatedPosts = ({ lang, category, currentSlug, currentTitle, currentExcerpt }: RelatedPostsProps) => {
+  // Use intelligent internal linking if we have current content info
+  let relatedPosts: Post[] = [];
+  
+  if (currentTitle && currentExcerpt) {
+    const keywords = extractKeywords(`${currentTitle} ${currentExcerpt} ${category}`);
+    const relatedContent = findRelatedContent(lang, keywords, category, currentSlug, 3);
+    
+    // Convert to post format
+    relatedPosts = relatedContent
+      .filter(item => item.type === 'blog')
+      .map(item => {
+        const post = getAllPosts(lang).find(p => `/${lang}/blog/${p.slug}` === item.url);
+        return post;
+      })
+      .filter((post): post is Post => post !== undefined);
+  }
+  
+  // Fallback to category-based if intelligent linking didn't work well enough
   if (relatedPosts.length < 3) {
-    const allPosts = getAllPosts(lang)
-      .filter(post => post.slug !== currentSlug && !relatedPosts.some(rp => rp.slug === post.slug))
-      .slice(0, 3 - relatedPosts.length);
-    relatedPosts = [...relatedPosts, ...allPosts];
+    const existingSlugs = new Set(relatedPosts.map(p => p.slug));
+    
+    let categoryPosts = getPostsByCategory(lang, category)
+      .filter(post => post.slug !== currentSlug && !existingSlugs.has(post.slug));
+
+    // Combine existing related posts with category posts
+    let combinedPosts = [...relatedPosts, ...categoryPosts].slice(0, 3);
+
+    // If we still don't have enough posts, fill with any other posts
+    if (combinedPosts.length < 3) {
+      const combinedSlugs = new Set(combinedPosts.map(p => p.slug));
+      const allOtherPosts = getAllPosts(lang)
+        .filter(post => post.slug !== currentSlug && !combinedSlugs.has(post.slug))
+        .slice(0, 3 - combinedPosts.length);
+      combinedPosts = [...combinedPosts, ...allOtherPosts];
+    }
+    
+    relatedPosts = combinedPosts;
   }
 
   if (relatedPosts.length === 0) {
@@ -60,16 +90,16 @@ const RelatedPosts = ({ lang, category, currentSlug }: RelatedPostsProps) => {
     <div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl" suppressHydrationWarning>
+          <div className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             {t.title}
-          </h2>
+          </div>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
             {t.description}
           </p>
         </div>
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {relatedPosts.map((post) => {
-            const colorClasses = categoryColors[post.category] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+            const colors = getCategoryColors(post.category);
             return (
               <article key={post.slug} className="flex flex-col items-start self-start">
                 <div className="relative w-full">
@@ -88,17 +118,21 @@ const RelatedPosts = ({ lang, category, currentSlug }: RelatedPostsProps) => {
                 </div>
                 <div className="max-w-xl">
                   <div className="mt-8 flex items-center gap-x-4 text-sm">
-                    <div className={`relative z-10 rounded-full px-3 py-1.5 font-medium ${colorClasses}`} suppressHydrationWarning>
+                    <div 
+                        className={`relative z-10 rounded-full px-3 py-1.5 font-medium shadow-sm transition-colors duration-200 ${colors.bgAccent}`}
+                        style={{ color: colors.borderAccentColor }}
+                        suppressHydrationWarning
+                    >
                       {post.category}
                     </div>
                   </div>
                   <div className="group relative">
-                    <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-300" suppressHydrationWarning>
+                    <div className="mt-3 text-lg font-semibold leading-6 text-gray-900 dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-300">
                       <Link href={`/${lang}/blog/${post.slug}`}>
                         <span className="absolute inset-0" />
                         {post.title}
                       </Link>
-                    </h3>
+                    </div>
                     <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-300">{post.excerpt}</p>
                   </div>
                 </div>

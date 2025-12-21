@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { i18n } from '@/i18n.config';
+import { sanitizeSlug, checkRateLimit, getClientIp } from '@/lib/security';
 
 export const runtime = 'nodejs';
 
@@ -11,11 +12,25 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> | { slug: string } }
 ) {
   try {
+    // Rate limiting: 60 requests per minute per IP
+    const ip = getClientIp(request);
+    const { success, remaining } = checkRateLimit(ip, { limit: 60, windowMs: 60 * 1000 });
+    
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Too many requests' }, 
+        { 
+          status: 429,
+          headers: { 'X-RateLimit-Limit': '60', 'X-RateLimit-Remaining': '0' }
+        }
+      );
+    }
+
     const resolvedParams = params instanceof Promise ? await params : params;
-    const slug = resolvedParams.slug;
+    const slug = sanitizeSlug(resolvedParams.slug);
     
     if (!slug) {
-      return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Valid slug is required' }, { status: 400 });
     }
     
     // Try to get language from query params or default to 'en'
@@ -32,13 +47,15 @@ export async function GET(
       if (fs.existsSync(enPath)) {
         const fileContents = fs.readFileSync(enPath, 'utf8');
         const { data } = matter(fileContents);
-        return NextResponse.json({
+        const response = NextResponse.json({
           slug,
           title: data.title,
           excerpt: data.excerpt || data.title,
           category: data.category || 'SEO',
           lang: 'en',
         });
+        response.headers.set('X-RateLimit-Remaining', remaining.toString());
+        return response;
       }
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
@@ -46,13 +63,15 @@ export async function GET(
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data } = matter(fileContents);
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       slug,
       title: data.title,
       excerpt: data.excerpt || data.title,
       category: data.category || 'SEO',
       lang,
     });
+    response.headers.set('X-RateLimit-Remaining', remaining.toString());
+    return response;
   } catch (e: any) {
     console.error('Error getting blog post data:', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

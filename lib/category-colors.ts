@@ -15,6 +15,7 @@ export interface CategoryColors {
   viaGradient: string;
   toGradient: string;
   bgAccent: string;
+  heroGradient: string;
 }
 
 const categoryColorMap: Record<string, CategoryColors> = {
@@ -31,6 +32,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-indigo-100 dark:via-indigo-900/30',
     toGradient: 'to-indigo-50 dark:to-indigo-900/20',
     bgAccent: 'bg-indigo-200/50 dark:bg-indigo-800/30',
+    heroGradient: 'from-[#635bff] to-indigo-900',
   },
   PPC: {
     bg: 'bg-pink-100 dark:bg-pink-900/30',
@@ -45,6 +47,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-pink-100 dark:via-pink-900/30',
     toGradient: 'to-pink-50 dark:to-pink-900/20',
     bgAccent: 'bg-pink-200/50 dark:bg-pink-800/30',
+    heroGradient: 'from-pink-600 to-pink-900',
   },
   'Social Media Marketing': {
     bg: 'bg-orange-100 dark:bg-orange-900/30',
@@ -59,6 +62,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-orange-100 dark:via-orange-900/30',
     toGradient: 'to-orange-50 dark:to-orange-900/20',
     bgAccent: 'bg-orange-200/50 dark:bg-orange-800/30',
+    heroGradient: 'from-orange-600 to-orange-900',
   },
   SMM: {
     bg: 'bg-orange-100 dark:bg-orange-900/30',
@@ -73,6 +77,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-orange-100 dark:via-orange-900/30',
     toGradient: 'to-orange-50 dark:to-orange-900/20',
     bgAccent: 'bg-orange-200/50 dark:bg-orange-800/30',
+    heroGradient: 'from-orange-600 to-orange-900',
   },
   'Content Creation': {
     bg: 'bg-cyan-100 dark:bg-cyan-900/30',
@@ -87,6 +92,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-cyan-100 dark:via-cyan-900/30',
     toGradient: 'to-cyan-50 dark:to-cyan-900/20',
     bgAccent: 'bg-cyan-200/50 dark:bg-cyan-800/30',
+    heroGradient: 'from-cyan-600 to-cyan-900',
   },
   Content: {
     bg: 'bg-cyan-100 dark:bg-cyan-900/30',
@@ -101,6 +107,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-cyan-100 dark:via-cyan-900/30',
     toGradient: 'to-cyan-50 dark:to-cyan-900/20',
     bgAccent: 'bg-cyan-200/50 dark:bg-cyan-800/30',
+    heroGradient: 'from-cyan-600 to-cyan-900',
   },
   // Default colors
   default: {
@@ -116,6 +123,7 @@ const categoryColorMap: Record<string, CategoryColors> = {
     viaGradient: 'via-gray-100 dark:via-gray-800',
     toGradient: 'to-gray-50 dark:to-gray-900',
     bgAccent: 'bg-gray-200/50 dark:bg-gray-700/30',
+    heroGradient: 'from-gray-700 to-gray-900',
   },
 };
 

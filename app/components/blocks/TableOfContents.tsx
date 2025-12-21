@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, ListBulletIcon } from '@heroicons/react/24/outline';
 import { getCategoryColors, type CategoryColors } from '@/lib/category-colors';
 import { type TocItem } from '@/lib/toc-parser';

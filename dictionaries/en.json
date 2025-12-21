@@ -1,2 +1,58 @@
-{}
-
+{
+  "about": {
+    "meta": {
+      "title": "About Qwantix: Strategy-Led Digital Marketing",
+      "description": "Learn about Qwantix, our SEO-first digital growth philosophy, and our commitment to building sustainable marketing systems for businesses."
+    },
+    "hero": {
+      "title": "Strategy-led digital marketing, built on search, structure, and measurable outcomes",
+      "subtitle": "Qwantix is a digital marketing consultancy where SEO-led strategy sits at the core of how growth decisions are made. We help businesses improve visibility, demand, and conversion by aligning search, content, analytics, and acquisition channels.",
+      "buttonText": "Get in touch"
+    },
+    "principles": {
+      "title": "How we think about digital growth",
+      "description": "Digital marketing works best when it functions as a system, not a collection of services. We don’t start with channels or tools; we start by understanding how users search, how demand is captured, and how a website is structured to support that journey.",
+      "items": [
+        { "name": "Search as the foundation", "description": "SEO informs structure, content, and intent — and supports smarter decisions across paid and organic channels." },
+        { "name": "Structure before scale", "description": "Growth only works when site architecture, page roles, and internal logic are clearly defined." },
+        { "name": "Intent over volume", "description": "Traffic matters only when it reflects real demand and supports business goals." },
+        { "name": "EEAT is designed into the system", "description": "Trust, expertise, and authority are built through content hierarchy, authorship, internal linking, and technical decisions." }
+      ]
+    },
+    "work": {
+      "title": "What we work on",
+      "description": "Qwantix typically supports projects where digital decisions have a direct impact on revenue, trust, or scalability.",
+      "items": [
+        "SEO-led website rebuilds and migrations",
+        "Local and service-based SEO in competitive markets",
+        "Enterprise and multi-market SEO strategy",
+        "EEAT-focused optimisation for regulated or high-trust industries",
+        "Content and semantic frameworks for scalable growth",
+        "Multilingual and localisation-led SEO across UK, US, and EU markets"
+      ]
+    },
+    "consultant": {
+      "title": "About the consultant behind Qwantix",
+      "description": "Qwantix is led by a multilingual digital marketing consultant with a background in law, regulated industries, and international digital strategy.",
+      "background": [
+        "Comfort working in compliance-heavy and high-risk niches",
+        "Experience translating complex expertise into search demand",
+        "Fluency across English, Spanish, German, and Russian markets",
+        "Ability to align marketing decisions with legal, medical, and operational constraints"
+      ]
+    },
+    "howWeWork": {
+      "eyebrow": "Our Philosophy",
+      "title": "How we work with clients",
+      "description": "We don’t sell fixed packages or generic retainers. We focus on building sustainable growth models — not disconnected tactics or short-term wins.",
+      "itemsTitle": "Qwantix works best with teams that:",
+      "items": [
+        "Value strategic clarity over quick wins",
+        "Operate in competitive or complex environments",
+        "Need structure, prioritisation, and long-term direction",
+        "Want digital marketing decisions grounded in search and analytics"
+      ],
+      "additionalInfo": "Most collaborations start with a focused strategic review or a clearly defined project, rather than an open-ended engagement."
+    }
+  }
+}

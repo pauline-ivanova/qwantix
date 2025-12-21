@@ -1,5 +1,6 @@
 import { getServiceData, getAllServiceSlugs } from '@/lib/services';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { notFound } from 'next/navigation';
 import ServicePageLayout from '@/app/components/layout/ServicePageLayout';
 import FAQ from '@/app/components/blocks/FAQ';
 import RelatedPosts from '@/app/components/blocks/RelatedPosts';
@@ -7,16 +8,16 @@ import FeatureList from '@/app/components/blocks/FeatureList';
 import StatsGrid from '@/app/components/blocks/StatsGrid';
 import ServiceCardGrid from '@/app/components/blocks/ServiceCardGrid';
 import ProcessSteps from '@/app/components/blocks/ProcessSteps';
+import MDXContent from '@/app/components/mdx/MDXContent';
 import JsonLd, { generateServiceSchema, generateBreadcrumbSchema, generateFAQSchema } from '@/app/components/common/JsonLd';
 import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
-import TableOfContents from '@/app/components/blocks/TableOfContents';
-import { parseTableOfContents } from '@/lib/toc-parser';
 
 const componentsMap: { [key: string]: React.ComponentType<any> } = {
   FeatureList,
   StatsGrid,
   ServiceCardGrid,
   ProcessSteps,
+  MdxContent: MDXContent,
 };
 
 type Props = {
@@ -55,28 +56,48 @@ export async function generateMetadata({ params }: { params: Promise<Props['para
 
 export default async function ServicePage({ params }: { params: Promise<Props['params']> | Props['params'] }) {
   const resolvedParams = params instanceof Promise ? await params : params;
+  
+  let serviceData;
+  try {
+    serviceData = await getServiceData(resolvedParams.lang, resolvedParams.slug);
+  } catch (error) {
+    notFound();
+  }
+  
   const {
     frontmatter,
     contentBlocks,
     faqData,
-    rawContent
-  } = await getServiceData(resolvedParams.lang, resolvedParams.slug);
-
-  // Parse TOC from raw content
-  const tocItems = rawContent ? parseTableOfContents(rawContent) : [];
+  } = serviceData;
 
   return (
     <>
       <ServicePageLayout title={frontmatter.title} description={frontmatter.description} category={frontmatter.category}>
-        {/* Table of Contents */}
-        {tocItems.length > 0 && (
-          <TableOfContents items={tocItems} category={frontmatter.category} />
-        )}
         {contentBlocks.map((block: any, index: number) => {
+          // Handle MdxContent blocks differently - they have 'source' instead of 'data'
+          if (block.type === 'MdxContent') {
+            const Component = componentsMap[block.type];
+            if (Component) {
+              const paddingClasses = index === 0 ? 'pt-16 sm:pt-24 pb-24 sm:pb-32' : 'py-24 sm:py-32';
+              return (
+                <div key={index} className={`bg-white dark:bg-gray-900 ${paddingClasses}`}>
+                  <div className="mx-auto max-w-4xl px-6 lg:px-8">
+                    <div className="space-y-6">
+                      <Component source={block.source} />
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          }
+
+          // Handle other block types (FeatureList, StatsGrid, etc.)
           const Component = componentsMap[block.type];
           if (Component) {
             const componentProps: { [key: string]: any } = {
               ...block.data,
+              category: frontmatter.category,
               padding: index === 0 ? 'top-compact' : 'default',
             };
 
@@ -85,8 +106,13 @@ export default async function ServicePage({ params }: { params: Promise<Props['p
           return null;
         })}
       </ServicePageLayout>
-      {faqData && <FAQ {...faqData} ctaText={frontmatter.faqCtaText} ctaButtonText={frontmatter.faqCtaButtonText} />}
-      <RelatedPosts lang={resolvedParams.lang} category={frontmatter.category} />
+      {faqData && <FAQ {...faqData} category={frontmatter.category} ctaText={frontmatter.faqCtaText} ctaButtonText={frontmatter.faqCtaButtonText} />}
+      <RelatedPosts 
+        lang={resolvedParams.lang} 
+        category={frontmatter.category} 
+        currentTitle={frontmatter.title}
+        currentExcerpt={frontmatter.description}
+      />
       {/* JSON-LD Schema */}
       <JsonLd
         data={[
@@ -99,6 +125,12 @@ export default async function ServicePage({ params }: { params: Promise<Props['p
             },
             serviceType: frontmatter.category,
             url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${resolvedParams.lang}/services/${resolvedParams.slug}`,
+            // Regional SEO targeting for Spain, Germany, and UK
+            areaServed: [
+              { '@type': 'Country', name: 'Spain' },
+              { '@type': 'Country', name: 'Germany' },
+              { '@type': 'Country', name: 'United Kingdom' },
+            ],
           }),
           generateBreadcrumbSchema([
             { name: 'Home', url: `/${resolvedParams.lang}` },
