@@ -64,18 +64,28 @@ export async function POST(request: Request) {
 ${sanitizedData.message}
       `.trim();
 
-      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: text,
-          parse_mode: 'HTML',
-        }),
-      });
+      try {
+        const telegramResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: text,
+            parse_mode: 'HTML',
+          }),
+        });
+
+        const telegramData = await telegramResponse.json();
+        
+        if (!telegramResponse.ok || !telegramData.ok) {
+          console.error('Telegram API error:', telegramData);
+        }
+      } catch (telegramError) {
+        // Log error but don't fail the request - form submission should still succeed
+        console.error('Failed to send message to Telegram:', telegramError);
+      }
     } else {
       console.warn('Telegram bot token or chat ID not configured');
-      // In a real scenario, you might want to log this or send an email instead
     }
 
     return NextResponse.json({ success: true });
