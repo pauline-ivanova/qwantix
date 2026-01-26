@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
 
 // Fixed date for all metadata: December 21, 2025
 const FIXED_DATE = new Date('2025-12-21T12:00:00Z');

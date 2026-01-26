@@ -38,7 +38,7 @@ import {
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> | { lang: string } }): Promise<Metadata> {
   const resolvedParams = params instanceof Promise ? await params : params;
   const lang = resolvedParams.lang;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}`;
   
   let title: string;
@@ -650,7 +650,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         />
       </section>
       <section id="blog-preview" style={{ contentVisibility: 'auto' }}>
-        <BlogPreview initialPosts={allPosts} lang={lang} baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'} />
+        <BlogPreview initialPosts={allPosts} lang={lang} baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'} />
       </section>
       <section id="contact-us" style={{ contentVisibility: 'auto' }}>
         <ContactUs lang={lang} />
@@ -660,7 +660,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         data={[
           generateOrganizationSchema({
             name: 'Qwantix Agency',
-            url: process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com',
+            url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency',
             description: isEs 
               ? 'Agencia de marketing digital impulsada por analítica. Transformamos tu presencia online generando crecimiento medible y maximizando tu ROI digital.'
               : isDe
@@ -698,7 +698,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           }),
           generateWebSiteSchema({
             name: 'Qwantix Agency',
-            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}`,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'}/${lang}`,
             description: isEs 
               ? 'Agencia de marketing digital impulsada por analítica'
               : isDe
@@ -710,7 +710,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               '@type': 'SearchAction',
               target: {
                 '@type': 'EntryPoint',
-                urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}/?s={search_term_string}`,
+                urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'}/${lang}/?s={search_term_string}`,
               },
               'query-input': 'required name=search_term_string',
             },

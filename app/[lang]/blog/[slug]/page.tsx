@@ -95,7 +95,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/blog/${slug}`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/blog/${slug}`);
   const ogImageUrl = `${baseUrl}/api/og/blog/${slug}?lang=${lang}`;

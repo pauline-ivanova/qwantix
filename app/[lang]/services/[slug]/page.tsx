@@ -35,7 +35,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<Props['params']> | Props['params'] }) {
   const resolvedParams = params instanceof Promise ? await params : params;
   const { frontmatter } = await getServiceData(resolvedParams.lang, resolvedParams.slug);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${resolvedParams.lang}/services/${resolvedParams.slug}`;
   const alternateLanguages = generateAlternateLanguages(resolvedParams.lang, `/${resolvedParams.lang}/services/${resolvedParams.slug}`);
   const ogImageUrl = `${baseUrl}/api/og/service/${resolvedParams.slug}?lang=${resolvedParams.lang}`;
