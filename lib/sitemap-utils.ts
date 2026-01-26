@@ -8,7 +8,7 @@ import { getAllPosts } from '@/lib/posts';
 import fs from 'fs';
 import path from 'path';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
 
 // Fixed date for all metadata as requested by the user: December 21, 2025
 const FIXED_DATE = new Date('2025-12-21T12:00:00Z');
@@ -23,6 +23,22 @@ const languageToRegional: Record<string, string> = {
   es: 'es-ES', // Spain
   ru: 'ru-RU', // Russia
 };
+
+/**
+ * Escape XML special characters
+ */
+function escapeXml(unsafe: string): string {
+  return unsafe.replace(/[<>&'"]/g, function (c) {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+}
 
 /**
  * Helper to add regional hreflang variants to alternates
@@ -224,7 +240,7 @@ export function generateSitemapXml(urls: SitemapUrl[]): string {
     let alternatesXml = '';
     if (url.alternates?.languages) {
       const hreflangEntries = Object.entries(url.alternates.languages)
-        .map(([lang, href]) => `      <xhtml:link rel="alternate" hreflang="${lang}" href="${href}" />`)
+        .map(([lang, href]) => `      <xhtml:link rel="alternate" hreflang="${escapeXml(lang)}" href="${escapeXml(href)}" />`)
         .join('\n');
       if (hreflangEntries) {
         alternatesXml = `\n${hreflangEntries}`;
@@ -232,15 +248,16 @@ export function generateSitemapXml(urls: SitemapUrl[]): string {
     }
 
     return `  <url>
-    <loc>${url.url}</loc>${lastmod ? '\n' + lastmod : ''}${changefreq ? '\n' + changefreq : ''}${priority ? '\n' + priority : ''}${alternatesXml}
+    <loc>${escapeXml(url.url)}</loc>${lastmod ? '\n' + lastmod : ''}${changefreq ? '\n' + changefreq : ''}${priority ? '\n' + priority : ''}${alternatesXml}
   </url>`;
   });
 
   return `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urlEntries.join('\n')}
-</urlset>`;
+</urlset>`.trim();
 }
 
 /**
@@ -250,12 +267,13 @@ export function generateSitemapIndex(sitemaps: Array<{ loc: string; lastmod?: Da
   const sitemapEntries = sitemaps.map((sitemap) => {
     const lastmod = `    <lastmod>${formatDate(FIXED_DATE)}</lastmod>`;
     return `  <sitemap>
-    <loc>${sitemap.loc}</loc>${lastmod ? '\n' + lastmod : ''}
+    <loc>${escapeXml(sitemap.loc)}</loc>${lastmod ? '\n' + lastmod : ''}
   </sitemap>`;
   });
 
   return `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapEntries.join('\n')}
-</sitemapindex>`;
+</sitemapindex>`.trim();
 }

@@ -10,7 +10,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'qwantix.com',
+        hostname: 'www.qwantix.agency',
         port: '',
         pathname: '/**',
       },

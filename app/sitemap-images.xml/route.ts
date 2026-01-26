@@ -3,7 +3,7 @@ import { getAllPosts } from '@/lib/posts';
 import { getAllServiceSlugs } from '@/lib/services';
 import { i18n } from '@/i18n.config';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
 
 /**
  * Generate image sitemap for better image indexing in Google Images

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { generateSitemapIndex } from '@/lib/sitemap-utils';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
 
 /**
  * Standard sitemap.xml that redirects to sitemap_index.xml

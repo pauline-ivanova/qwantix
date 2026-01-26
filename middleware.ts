@@ -20,6 +20,17 @@ function getLocale(request: NextRequest): string | undefined {
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  
+  // Skip middleware for sitemap files and other static resources
+  if (
+    pathname.startsWith('/sitemap') ||
+    pathname.startsWith('/robots.txt') ||
+    pathname.startsWith('/favicon') ||
+    pathname.startsWith('/icon')
+  ) {
+    return NextResponse.next();
+  }
+  
   const pathnameIsMissingLocale = i18n.locales.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
@@ -37,6 +48,18 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Matcher ignoring `/_next/`, `/api/`, and static files like favicons
-  matcher: ["/((?!api|_next/static|_next/image|images|favicon.ico|favicon.png|icon.png|icon.ico).*)"],
+  // Matcher ignoring `/_next/`, `/api/`, and static files like favicons and sitemaps
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - images (image files)
+     * - favicon.ico, favicon.png, icon.png, icon.ico (favicons)
+     * - robots.txt (robots file)
+     * - sitemap (all sitemap files: sitemap.xml, sitemap-*.xml, etc.)
+     */
+    "/((?!api|_next/static|_next/image|images|favicon\\.ico|favicon\\.png|icon\\.png|icon\\.ico|robots\\.txt|sitemap).*)",
+  ],
 };
