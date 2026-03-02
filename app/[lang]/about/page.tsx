@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const resolvedParams = params instanceof Promise ? await params : params;
   const lang = resolvedParams.lang;
   const dict: any = await getDictionary(lang as any);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/about`;
 
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/about`);

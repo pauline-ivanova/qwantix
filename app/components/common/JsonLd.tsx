@@ -137,7 +137,7 @@ export function generateServiceSchema({
   serviceType?: string;
   url?: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   
   const schema: any = {
     '@context': 'https://schema.org',
@@ -191,7 +191,7 @@ export function generateFAQSchema(faqs: Array<{ question: string; answer: string
  * Generate BreadcrumbList schema
  */
 export function generateBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   
   return {
     '@context': 'https://schema.org',

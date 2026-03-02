@@ -20,7 +20,7 @@ const BlogPreview = ({ initialPosts, lang, baseUrl }: { initialPosts: Post[], la
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(initialPosts.slice(0, 3));
   const [categories, setCategories] = useState<string[]>(['All', ...Array.from(new Set(initialPosts.map(p => p.category)))]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const siteUrl = baseUrl || (typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'));
+  const siteUrl = baseUrl || (typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'));
 
   useEffect(() => {
     setFilteredPosts(initialPosts.slice(0, 3));

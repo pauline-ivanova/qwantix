@@ -180,7 +180,7 @@ export async function validateServicePage(
     }
 
     // Validate schemas
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
     const schemas: any[] = [];
     
     // Breadcrumb
@@ -320,7 +320,7 @@ export async function validateBlogPage(
     }
 
     // Validate schemas
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
     const schemas: any[] = [];
     
     // Breadcrumb

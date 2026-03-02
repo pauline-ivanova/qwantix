@@ -7,7 +7,7 @@ interface SchemaOrgProps {
 }
 
 export default function SchemaOrg({ lang, type = 'Organization', data }: SchemaOrgProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
 
   const organizationSchema = {
     '@context': 'https://schema.org',
