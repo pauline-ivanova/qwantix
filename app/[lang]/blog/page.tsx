@@ -1,5 +1,42 @@
 import { getAllPosts } from '@/lib/posts';
 import BlogFilter from '@/app/components/blocks/BlogFilter';
+import type { Metadata } from 'next';
+import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> | { lang: string } }): Promise<Metadata> {
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const lang = resolvedParams.lang;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
+  const currentUrl = `${baseUrl}/${lang}/blog`;
+  const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/blog`);
+
+  const titles: Record<string, string> = {
+    en: 'Qwantix Insights: Digital Marketing Blog',
+    de: 'Qwantix Insights: Digital Marketing Blog',
+    es: 'Qwantix Insights: Blog de Marketing Digital',
+    ru: 'Qwantix Insights: Блог о цифровом маркетинге',
+  };
+
+  const descriptions: Record<string, string> = {
+    en: 'Expert articles, case studies, and guides on SEO, PPC, social media, and content marketing from Qwantix Agency.',
+    de: 'Fachartikel, Case Studies und Guides zu SEO, PPC, Social Media und Content Marketing von Qwantix Agency.',
+    es: 'Artículos, casos de éxito y guías sobre SEO, PPC, redes sociales y marketing de contenidos de Qwantix Agency.',
+    ru: 'Статьи, кейсы и практические руководства по SEO, PPC, соцсетям и контент‑маркетингу от Qwantix Agency.',
+  };
+
+  return {
+    ...generateStandardMetadata({
+      title: titles[lang] || titles.en,
+      description: descriptions[lang] || descriptions.en,
+      url: currentUrl,
+      pagePath: `/${lang}/blog`,
+      language: lang,
+      alternateLanguages,
+      image: '/images/og-image.jpg',
+      keywords: ['digital marketing blog', 'SEO tips', 'PPC strategies', 'social media marketing', 'content marketing insights'],
+    }),
+  };
+}
 
 export default async function BlogPage({ params }: { params: Promise<{ lang: string }> | { lang: string } }) {
   const resolvedParams = params instanceof Promise ? await params : params;
