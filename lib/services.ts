@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { serialize } from 'next-mdx-remote/serialize';
 import { sanitizeSlug } from './security';
 import {
   ChartBarIcon,
@@ -117,7 +116,7 @@ export type ServiceContentBlock =
   | { type: 'StatsGrid'; data: { title: string; description: string; stats: { name: string; value: string }[] } }
   | { type: 'ServiceCardGrid'; data: { title: string; description: string; services: { name: string; leadText: string; features: string[]; icon: React.ElementType; href: string; buttonText: string }[] } }
   | { type: 'ProcessSteps'; data: { title: string; description: string; steps: { name: string; description: string; icon: React.ElementType }[]; conclusion: string } }
-  | { type: 'MdxContent'; source: any };
+  | { type: 'MdxContent'; content: string };
 
 export type ServiceData = {
   slug: string;
@@ -756,7 +755,7 @@ export async function getServiceData(lang: string, slug: string): Promise<Servic
     if (leadingContent) {
       parsedData.contentBlocks.push({
           type: 'MdxContent',
-          source: await serialize(leadingContent)
+          content: leadingContent
       });
     }
   }
@@ -1016,7 +1015,7 @@ export async function getServiceData(lang: string, slug: string): Promise<Servic
             // This is the default case for sections with ## titles but no recognized ID
             parsedData.contentBlocks.push({
                 type: 'MdxContent',
-                source: await serialize(section.trim())
+                content: section.trim()
             });
             blockProcessed = true; // Mark as processed to avoid double-adding
             break;

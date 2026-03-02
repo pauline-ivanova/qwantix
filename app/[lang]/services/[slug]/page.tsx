@@ -1,5 +1,4 @@
 import { getServiceData, getAllServiceSlugs } from '@/lib/services';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
 import ServicePageLayout from '@/app/components/layout/ServicePageLayout';
 import FAQ from '@/app/components/blocks/FAQ';
@@ -8,7 +7,7 @@ import FeatureList from '@/app/components/blocks/FeatureList';
 import StatsGrid from '@/app/components/blocks/StatsGrid';
 import ServiceCardGrid from '@/app/components/blocks/ServiceCardGrid';
 import ProcessSteps from '@/app/components/blocks/ProcessSteps';
-import MDXContent from '@/app/components/mdx/MDXContent';
+import MarkdownContent from '@/app/components/mdx/MarkdownContent';
 import JsonLd, { generateServiceSchema, generateBreadcrumbSchema, generateFAQSchema } from '@/app/components/common/JsonLd';
 import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
 
@@ -17,7 +16,6 @@ const componentsMap: { [key: string]: React.ComponentType<any> } = {
   StatsGrid,
   ServiceCardGrid,
   ProcessSteps,
-  MdxContent: MDXContent,
 };
 
 type Props = {
@@ -74,22 +72,19 @@ export default async function ServicePage({ params }: { params: Promise<Props['p
     <>
       <ServicePageLayout title={frontmatter.title} description={frontmatter.description} category={frontmatter.category}>
         {contentBlocks.map((block: any, index: number) => {
-          // Handle MdxContent blocks differently - they have 'source' instead of 'data'
+          // Render MDX content blocks explicitly (client component) so Next can
+          // correctly treat it as a Client Component boundary.
           if (block.type === 'MdxContent') {
-            const Component = componentsMap[block.type];
-            if (Component) {
-              const paddingClasses = index === 0 ? 'pt-16 sm:pt-24 pb-24 sm:pb-32' : 'py-24 sm:py-32';
-              return (
-                <div key={index} className={`bg-white dark:bg-gray-900 ${paddingClasses}`}>
-                  <div className="mx-auto max-w-4xl px-6 lg:px-8">
-                    <div className="space-y-6">
-                      <Component source={block.source} />
-                    </div>
+            const paddingClasses = index === 0 ? 'pt-16 sm:pt-24 pb-24 sm:pb-32' : 'py-24 sm:py-32';
+            return (
+              <div key={index} className={`bg-white dark:bg-gray-900 ${paddingClasses}`}>
+                <div className="mx-auto max-w-4xl px-6 lg:px-8">
+                  <div className="space-y-6">
+                    <MarkdownContent content={block.content || ''} />
                   </div>
                 </div>
-              );
-            }
-            return null;
+              </div>
+            );
           }
 
           // Handle other block types (FeatureList, StatsGrid, etc.)
