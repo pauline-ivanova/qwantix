@@ -298,9 +298,13 @@ export function generateArticleSchema({
  * Generate Review and AggregateRating schema
  */
 export function generateReviewSchema({
+  name = 'Qwantix Agency',
+  url,
   reviews,
   aggregateRating,
 }: {
+  name?: string;
+  url?: string;
   reviews?: Array<{
     author: string;
     reviewBody: string;
@@ -314,9 +318,15 @@ export function generateReviewSchema({
     ratingCount: number;
   };
 }) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
+
   const schema: any = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    name,
+    url: url
+      ? (url.startsWith('http') ? url : `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`)
+      : baseUrl,
   };
 
   if (aggregateRating) {

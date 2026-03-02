@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ru: 'Политика конфиденциальности и защита данных Qwantix Agency. Информация о том, как мы собираем, используем и защищаем ваши персональные данные.',
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/privacy`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/privacy`);
 

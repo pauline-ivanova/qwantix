@@ -717,6 +717,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           }),
           // Review and AggregateRating schema for trust signals
           generateReviewSchema({
+            name: 'Qwantix Agency',
+            url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency',
             aggregateRating: {
               ratingValue: 4.8,
               bestRating: 5,
