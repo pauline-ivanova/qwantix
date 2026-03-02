@@ -27,7 +27,7 @@ type Props = {
 
 export async function generateStaticParams() {
   const paths = getAllServiceSlugs();
-  return paths;
+  return paths.map((p: any) => (p?.params ? p.params : p));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Props['params']> | Props['params'] }) {
