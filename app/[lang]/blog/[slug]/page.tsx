@@ -5,7 +5,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { i18n } from '@/i18n.config';
 import JsonLd, { generateArticleSchema, generateBreadcrumbSchema } from '@/app/components/common/JsonLd';
-import { generateStandardMetadata, generateAlternateLanguages } from '@/lib/metadata-utils';
+import { generateStandardMetadata } from '@/lib/metadata-utils';
 import { Metadata } from 'next';
 import TableOfContents from '@/app/components/blocks/TableOfContents';
 import { parseTableOfContents } from '@/lib/toc-parser';
@@ -97,7 +97,16 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/blog/${slug}`;
-  const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/blog/${slug}`);
+
+  // Build hreflang alternates only for languages where this post actually exists
+  const existingLangs = i18n.locales.filter((locale) => !!getPost(locale, slug));
+  const alternateLanguages: Record<string, string> = {};
+  existingLangs.forEach((locale) => {
+    if (locale !== lang) {
+      alternateLanguages[locale] = `${baseUrl}/${locale}/blog/${slug}`;
+    }
+  });
+
   const ogImageUrl = `${baseUrl}/api/og/blog/${slug}?lang=${lang}`;
 
   const baseMetadata = generateStandardMetadata({
