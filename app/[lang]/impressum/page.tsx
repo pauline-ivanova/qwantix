@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ru: 'Юридическая информация и контактные данные Qwantix Agency в лице Полины Ивановой.',
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/impressum`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/impressum`);
 

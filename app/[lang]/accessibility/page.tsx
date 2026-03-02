@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ru: 'Наше обязательство по обеспечению цифровой доступности для людей с ограниченными возможностями.',
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/accessibility`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/accessibility`);
 

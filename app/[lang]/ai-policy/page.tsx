@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ru: 'Прозрачность использования ИИ в Qwantix Agency. Наши обязательства по этичному ИИ и защите данных.',
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/ai-policy`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/ai-policy`);
 

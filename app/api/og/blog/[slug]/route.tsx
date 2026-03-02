@@ -188,7 +188,7 @@ export async function GET(
                 color: 'rgba(255, 255, 255, 0.9)',
               }}
             >
-              qwantix.com
+              qwantix.agency
             </div>
           </div>
         </div>
@@ -225,7 +225,7 @@ export async function GET(
               textAlign: 'center',
             }}
           >
-            qwantix.com
+            qwantix.agency
           </h1>
         </div>
       ),

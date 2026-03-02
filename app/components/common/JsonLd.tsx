@@ -241,7 +241,7 @@ export function generateArticleSchema({
     type?: 'Person' | 'Organization';
   };
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const imageUrl = image 
     ? (image.startsWith('http') ? image : `${baseUrl}${image.startsWith('/') ? '' : '/'}${image}`)
     : undefined;
@@ -384,7 +384,7 @@ export function generateHowToSchema({
   image?: string;
   url?: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   
   const schema: any = {
     '@context': 'https://schema.org',
@@ -446,7 +446,7 @@ export function generateVideoObjectSchema({
     logo?: string;
   };
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   
   const schema: any = {
     '@context': 'https://schema.org',
@@ -534,7 +534,7 @@ export function generateLocalBusinessSchema({
     ratingCount: number;
   };
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   
   const schema: any = {
     '@context': 'https://schema.org',
@@ -647,7 +647,7 @@ export function generatePersonSchema({
   }>;
   knowsAbout?: string[];
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const imageUrl = image 
     ? (image.startsWith('http') ? image : `${baseUrl}${image.startsWith('/') ? '' : '/'}${image}`)
     : undefined;

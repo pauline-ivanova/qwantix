@@ -350,23 +350,23 @@ export default async function PostPage({ params }: { params: Promise<{ lang: str
               if (authorData) {
                 return {
                   name: authorData.name,
-                  url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}/author/${authorData.slug}`,
+                  url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'}/${lang}/author/${authorData.slug}`,
                   type: 'Person' as const,
                 };
               }
               // Fallback to Qwantix Agency if author not found
               return {
                 name: 'Qwantix Agency',
-                url: process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com',
+                url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency',
                 type: 'Organization' as const,
               };
             })(),
             datePublished: FIXED_DATE.toISOString(),
             dateModified: FIXED_DATE.toISOString(),
-            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${lang}/blog/${slug}`,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'}/${lang}/blog/${slug}`,
             publisher: {
               name: 'Qwantix Agency',
-              logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/images/qwantix-logo.svg`,
+              logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'}/images/qwantix-logo.svg`,
             },
           }),
           generateBreadcrumbSchema([

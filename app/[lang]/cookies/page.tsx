@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ru: 'Политика использования файлов cookie Qwantix Agency. Информация об использовании файлов cookie на нашем веб-сайте.',
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/cookies`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/cookies`);
 

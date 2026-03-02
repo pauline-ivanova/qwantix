@@ -119,7 +119,7 @@ export default async function ServicePage({ params }: { params: Promise<Props['p
               name: 'Qwantix Agency',
             },
             serviceType: frontmatter.category,
-            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com'}/${resolvedParams.lang}/services/${resolvedParams.slug}`,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency'}/${resolvedParams.lang}/services/${resolvedParams.slug}`,
             // Regional SEO targeting for Spain, Germany, and UK
             areaServed: [
               { '@type': 'Country', name: 'Spain' },

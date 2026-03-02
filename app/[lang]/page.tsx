@@ -669,8 +669,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               ? 'Цифровое маркетинговое агентство на основе аналитики. Трансформируем ваше онлайн-присутствие, обеспечивая измеримый рост и максимальный цифровой ROI.'
               : 'Digital Marketing Agency Powered by Analytics. We transform your online presence, driving measurable growth and maximizing your digital ROI.',
             contactPoint: {
-              contactType: 'Customer Service',
-              email: 'info@qwantix.com',
+            contactType: 'Customer Service',
+            email: 'info@qwantix.agency',
             },
             slogan: isEs 
               ? 'Marketing digital impulsado por analítica'

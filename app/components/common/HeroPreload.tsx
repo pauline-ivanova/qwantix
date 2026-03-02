@@ -11,7 +11,7 @@ interface HeroPreloadProps {
  */
 export default function HeroPreload({ imagePath }: HeroPreloadProps) {
   // Ensure absolute URL
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const absoluteImagePath = imagePath.startsWith('http') 
     ? imagePath 
     : `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;

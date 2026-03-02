@@ -54,7 +54,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ lang: s
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
 
   const translations = {
     en: {

@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ru: 'Условия и положения использования услуг и веб-сайта Qwantix Agency.',
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qwantix.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
   const currentUrl = `${baseUrl}/${lang}/terms`;
   const alternateLanguages = generateAlternateLanguages(lang, `/${lang}/terms`);
 
