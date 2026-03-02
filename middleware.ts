@@ -52,6 +52,18 @@ export function middleware(request: NextRequest) {
       )
     );
   }
+
+  // Locale is present in the path, pass it down so RootLayout can set <html lang>
+  const localeFromPath = pathname.split('/')[1] || i18n.defaultLocale;
+  const resolvedLocale = i18n.locales.includes(localeFromPath as any) ? localeFromPath : i18n.defaultLocale;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-qwantix-locale', resolvedLocale);
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {

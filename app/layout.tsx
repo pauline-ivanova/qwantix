@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
+import { i18n } from "@/i18n.config";
 
 // Optimize font loading with display swap and preload
 const inter = Inter({ 
@@ -23,13 +25,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const h = await headers();
+  const requestedLocale = h.get("x-qwantix-locale") || i18n.defaultLocale;
+  const lang = i18n.locales.includes(requestedLocale as any) ? requestedLocale : i18n.defaultLocale;
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://placehold.co" crossOrigin="anonymous" />
         {/* DNS prefetch for external resources */}
