@@ -6,16 +6,23 @@ import { i18n } from "@/i18n.config";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
-function getLocale(request: NextRequest): string | undefined {
-  const negotiatorHeaders: Record<string, string> = {};
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+function getLocale(request: NextRequest): string {
+  try {
+    const negotiatorHeaders: Record<string, string> = {};
+    request.headers.forEach((value, key) => {
+      negotiatorHeaders[key] = value;
+    });
 
-  // @ts-ignore locales are readonly
-  const locales: string[] = i18n.locales;
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+    // @ts-ignore locales are readonly
+    const locales: string[] = i18n.locales;
+    const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
 
-  const locale = matchLocale(languages, locales, i18n.defaultLocale);
-  return locale;
+    const locale = matchLocale(languages, locales, i18n.defaultLocale);
+    return locale || i18n.defaultLocale;
+  } catch (error) {
+    console.error("Error determining locale in middleware:", error);
+    return i18n.defaultLocale;
+  }
 }
 
 export function middleware(request: NextRequest) {
