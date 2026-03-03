@@ -54,15 +54,15 @@ export default async function CaseStudiesPage({ params }: { params: Promise<{ la
     },
     es: {
       title: 'SEO guiado por la estrategia. Probado en todas las industrias.',
-      description: 'Una visión general estructurada de proyectos anonimizados entregados en salud, finanzas, B2B y negocios basados en servicios.',
+      description: 'Una visión general estructurada de proyectos anonimizados entregados en salud, finanzas, B2B y negocios basados en servicios. Cada caso refleja un reto estratégico concreto y las decisiones de SEO detrás de resultados medibles.',
     },
     de: {
       title: 'Strategieorientiertes SEO. Branchenübergreifend bewährt.',
-      description: 'Ein strukturierter Überblick über anonymisierte Projekte aus den Bereichen Gesundheit, Finanzen, B2B und Dienstleistungen.',
+      description: 'Ein strukturierter Überblick über anonymisierte Projekte aus den Bereichen Gesundheit, Finanzen, B2B und Dienstleistungen. Jeder Case spiegelt eine konkrete strategische Herausforderung und die SEO-Entscheidungen hinter messbaren Ergebnissen wider.',
     },
     ru: {
       title: 'SEO на основе стратегии. Проверено в разных нишах.',
-      description: 'Структурированный обзор анонимизированных проектов в сферах медицины, финансов, B2B и сервисного бизнеса.',
+      description: 'Структурированный обзор анонимизированных проектов в сферах медицины, финансов, B2B и сервисного бизнеса. Каждый кейс отражает конкретный стратегический вызов и решения в SEO, которые привели к измеримым результатам.',
     }
   }[lang as keyof { en: any, es: any, de: any, ru: any }] || {
     title: 'Strategy-led SEO. Proven across industries.',

@@ -151,6 +151,7 @@ export default function Footer() {
   const isEs = detectedLang === 'es';
   const isDe = detectedLang === 'de';
   const isRu = detectedLang === 'ru';
+  const currentYear = new Date().getFullYear();
 
   const navigation = {
     services: navBase.services.map(s => ({
@@ -287,7 +288,7 @@ export default function Footer() {
         {/* Bottom Copyright */}
         <div className="mt-8">
           <p className="text-xs leading-5 text-gray-400">
-            &copy; 2025 Qwantix Agency. {isEs ? 'Todos los derechos reservados.' : isDe ? 'Alle Rechte vorbehalten.' : isRu ? 'Все права защищены.' : 'All rights reserved.'}
+            &copy; {currentYear} Qwantix Agency. {isEs ? 'Todos los derechos reservados.' : isDe ? 'Alle Rechte vorbehalten.' : isRu ? 'Все права защищены.' : 'All rights reserved.'}
           </p>
         </div>
       </div>
