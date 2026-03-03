@@ -101,7 +101,8 @@ export function generateStandardMetadata(options: StandardMetadataOptions): Part
   } = options;
 
   const keywordsString = keywords.length > 0 ? keywords.join(', ') : '';
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
+  // Use the primary production domain for canonical URLs to avoid mismatched hosts
+  const baseUrl = 'https://www.qwantix.agency';
   
   // Default OG image - use og-image.jpg as fallback
   const ogImage = image || `${baseUrl}/images/og-image.jpg`;
@@ -198,7 +199,8 @@ export function generateAlternateLanguages(
   currentLang: string,
   path: string
 ): Record<string, string> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
+  // Keep hreflang URLs consistent with canonical domain
+  const baseUrl = 'https://www.qwantix.agency';
   const alternates: Record<string, string> = {};
 
   // Remove leading slash from path if present

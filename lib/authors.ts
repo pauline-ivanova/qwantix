@@ -35,7 +35,7 @@ export const authors: Record<string, Author> = {
     education: 'Academic background in linguistics, law, and international regulation. This informs her approach to content accuracy, localisation quality, and compliance-aware SEO, particularly in regulated and YMYL-related industries.',
     socialLinks: {
       linkedin: 'https://www.linkedin.com/in/polina-a-ivanova/',
-      upwork: 'https://www.upwork.com/freelancers/ivanovapolina',
+      upwork: 'https://www.upwork.com/freelancers/~0105ea54356bd0e178',
     },
   },
 };

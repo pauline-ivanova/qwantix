@@ -65,7 +65,7 @@ const content = {
     },
     dispute: {
       title: 'Dispute Resolution',
-      text: 'The European Commission provides a platform for online dispute resolution (OS): https://ec.europa.eu/consumers/odr. We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.',
+      text: 'The European Commission provides information on consumer dispute resolution here: https://consumer-redress.ec.europa.eu/site-relocation_en. We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.',
     }
   },
   de: {
@@ -89,7 +89,7 @@ const content = {
     },
     dispute: {
       title: 'Streitbeilegung',
-      text: 'Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.',
+      text: 'Die Europäische Kommission stellt Informationen zur Verbraucherstreitbeilegung hier bereit: https://consumer-redress.ec.europa.eu/site-relocation_en. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.',
     }
   },
   es: {
@@ -113,7 +113,7 @@ const content = {
     },
     dispute: {
       title: 'Resolución de Disputas',
-      text: 'La Comisión Europea facilita una plataforma de resolución de litigios en línea, la cual se encuentra disponible en el siguiente enlace: https://ec.europa.eu/consumers/odr. No estamos dispuestos ni obligados a participar en procedimientos de resolución de disputas ante una junta de arbitraje de consumo.',
+      text: 'La Comisión Europea proporciona información sobre la resolución de litigios de consumo aquí: https://consumer-redress.ec.europa.eu/site-relocation_en. No estamos dispuestos ni obligados a participar en procedimientos de resolución de disputas ante una junta de arbitraje de consumo.',
     }
   },
   ru: {
@@ -137,7 +137,7 @@ const content = {
     },
     dispute: {
       title: 'Разрешение споров',
-      text: 'Европейская комиссия предоставляет платформу для онлайн-разрешения споров (OS): https://ec.europa.eu/consumers/odr. Мы не желаем и не обязаны участвовать в процедурах по разрешению споров в органах потребительского арбитража.',
+      text: 'Европейская комиссия предоставляет информацию о механизмах разрешения потребительских споров здесь: https://consumer-redress.ec.europa.eu/site-relocation_en. Мы не желаем и не обязаны участвовать в процедурах по разрешению споров в органах потребительского арбитража.',
     }
   },
 };
@@ -235,11 +235,19 @@ export default async function ImpressumPage({ params }: { params: Promise<{ lang
             <p className="text-gray-700 leading-relaxed">
               {contentLang.dispute.text.split('https://').map((part, i) => {
                 if (i === 0) return part;
-                const url = 'https://' + part.split(' ')[0];
-                const rest = part.slice(part.split(' ')[0].length);
+                const rawUrlPart = part.split(' ')[0];
+                // Strip trailing punctuation (like a final period) from the URL part
+                const cleanUrlPart = rawUrlPart.replace(/[.,)]+$/, '');
+                const url = 'https://' + cleanUrlPart;
+                const rest = part.slice(rawUrlPart.length);
                 return (
                   <span key={i}>
-                    <a href={url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline break-all">
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-indigo-600 hover:underline break-all"
+                    >
                       {url}
                     </a>
                     {rest}

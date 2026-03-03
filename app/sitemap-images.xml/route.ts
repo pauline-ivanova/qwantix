@@ -3,7 +3,8 @@ import { getAllPosts } from '@/lib/posts';
 import { getAllServiceSlugs } from '@/lib/services';
 import { i18n } from '@/i18n.config';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
+// Use the canonical domain for all image sitemap URLs
+const baseUrl = 'https://www.qwantix.agency';
 
 /**
  * Generate image sitemap for better image indexing in Google Images
@@ -84,7 +85,7 @@ export async function GET() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>${baseUrl}</loc>
+    <loc>${baseUrl}/en/</loc>
 ${imageEntries.join('\n')}
   </url>
 </urlset>`;

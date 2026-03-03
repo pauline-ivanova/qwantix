@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getMainPageUrls, generateSitemapXml } from '@/lib/sitemap-utils';
+import { getMainPageUrls, getAuthorUrls, generateSitemapXml } from '@/lib/sitemap-utils';
 
 export async function GET() {
-  const urls = getMainPageUrls();
+  const urls = [
+    ...getMainPageUrls(),
+    ...getAuthorUrls(),
+  ];
   const xml = generateSitemapXml(urls);
 
   return new NextResponse(xml, {

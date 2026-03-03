@@ -5,10 +5,12 @@
 import { i18n } from '@/i18n.config';
 import { getAllServiceSlugs } from '@/lib/services';
 import { getAllPosts } from '@/lib/posts';
+import { getAllAuthors } from '@/lib/authors';
 import fs from 'fs';
 import path from 'path';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
+// Use the primary production domain for all sitemap URLs
+const baseUrl = 'https://www.qwantix.agency';
 
 // Fixed date for all metadata as requested by the user: December 21, 2025
 const FIXED_DATE = new Date('2025-12-21T12:00:00Z');
@@ -82,6 +84,7 @@ export function getMainPageUrls(): SitemapUrl[] {
     // Add regional variants for better regional SEO
     const alternatesWithRegional = addRegionalAlternates(alternates);
 
+    // Home page
     urls.push({
       url: `${baseUrl}/${lang}`,
       lastModified: FIXED_DATE,
@@ -90,6 +93,74 @@ export function getMainPageUrls(): SitemapUrl[] {
       alternates: {
         languages: alternatesWithRegional,
       },
+    });
+
+    // About page
+    urls.push({
+      url: `${baseUrl}/${lang}/about`,
+      lastModified: FIXED_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+      alternates: {
+        languages: alternatesWithRegional,
+      },
+    });
+
+    // Blog listing page
+    urls.push({
+      url: `${baseUrl}/${lang}/blog`,
+      lastModified: FIXED_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+      alternates: {
+        languages: alternatesWithRegional,
+      },
+    });
+
+    // Case studies listing page
+    urls.push({
+      url: `${baseUrl}/${lang}/case-studies`,
+      lastModified: FIXED_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+      alternates: {
+        languages: alternatesWithRegional,
+      },
+    });
+  });
+
+  return urls;
+}
+
+/**
+ * Generate URLs for author pages
+ */
+export function getAuthorUrls(): SitemapUrl[] {
+  const urls: SitemapUrl[] = [];
+  const authors = getAllAuthors();
+
+  if (!authors.length) return urls;
+
+  i18n.locales.forEach((lang) => {
+    authors.forEach((author) => {
+      const alternates: Record<string, string> = {};
+
+      // For now author slugs are shared across languages
+      i18n.locales.forEach((altLang) => {
+        alternates[altLang] = `${baseUrl}/${altLang}/author/${author.slug}`;
+      });
+
+      const alternatesWithRegional = addRegionalAlternates(alternates);
+
+      urls.push({
+        url: `${baseUrl}/${lang}/author/${author.slug}`,
+        lastModified: FIXED_DATE,
+        changeFrequency: 'monthly',
+        priority: 0.5,
+        alternates: {
+          languages: alternatesWithRegional,
+        },
+      });
     });
   });
 
