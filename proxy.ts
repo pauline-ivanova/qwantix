@@ -20,15 +20,15 @@ function getLocale(request: NextRequest): string {
     const locale = matchLocale(languages, locales, i18n.defaultLocale);
     return locale || i18n.defaultLocale;
   } catch (error) {
-    console.error("Error determining locale in middleware:", error);
+    console.error("Error determining locale in proxy:", error);
     return i18n.defaultLocale;
   }
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   
-  // Skip middleware for sitemap files and other static resources
+  // Skip proxy for sitemap files and other static resources
   if (
     pathname.startsWith('/sitemap') ||
     pathname.startsWith('/robots.txt') ||
@@ -82,3 +82,4 @@ export const config = {
     "/((?!api|_next/static|_next/image|images|favicon\\.ico|favicon\\.png|icon\\.png|icon\\.ico|robots\\.txt|sitemap).*)",
   ],
 };
+
