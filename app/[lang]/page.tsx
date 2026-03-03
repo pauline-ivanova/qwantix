@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     keywords = ['marketing digital', 'SEO', 'PPC', 'publicidad online', 'marketing en redes sociales', 'content marketing', 'analítica web'];
   } else if (lang === 'de') {
     title = 'Qwantix: Digital Marketing – datengetrieben';
-    description = 'Wachstum mit datengetriebenem Online‑Marketing: SEO, PPC & Content für maximalen ROI.';
+    description = 'Wachstum mit datengetriebenem Online‑Marketing: SEO, PPC und Content‑Strategien, die Sichtbarkeit, qualifizierte Leads und langfristigen digitalen ROI messbar steigern.';
     keywords = ['Digital Marketing', 'SEO', 'PPC', 'Online-Werbung', 'Social Media Marketing', 'Content Marketing', 'Web-Analyse'];
   } else if (lang === 'ru') {
     const dict: any = await getDictionary('ru' as any);

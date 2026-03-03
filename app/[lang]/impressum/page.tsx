@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
   
   const descriptions = {
-    en: 'Legal information and contact details of Qwantix Agency, represented by Polina Ivanova.',
-    es: 'Información legal y datos de contacto de Qwantix Agency, representada por Polina Ivanova.',
-    de: 'Rechtliche Informationen und Kontaktdaten von Qwantix Agency, vertreten durch Polina Ivanova.',
-    ru: 'Юридическая информация и контактные данные Qwantix Agency в лице Полины Ивановой.',
+    en: 'Legal information, ownership details, and direct contact channels for Qwantix Agency, represented by Polina Ivanova, including address, tax details, and dispute resolution notes.',
+    es: 'Información legal, datos de titularidad y canales de contacto directo de Qwantix Agency, representada por Polina Ivanova, incluyendo dirección, datos fiscales y notas sobre resolución de disputas.',
+    de: 'Rechtliche Informationen, Inhaberdaten und direkte Kontaktmöglichkeiten von Qwantix Agency, vertreten durch Polina Ivanova, einschließlich Anschrift, Steuerangaben und Hinweisen zur Streitbeilegung.',
+    ru: 'Юридическая информация, сведения о владельце и прямые контакты Qwantix Agency в лице Полины Ивановой, включая адрес, налоговые реквизиты и примечания о порядке разрешения споров.',
   };
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';

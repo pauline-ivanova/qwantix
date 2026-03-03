@@ -14,10 +14,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
   
   const descriptions = {
-    en: 'Cookie policy of Qwantix Agency. Information about the use of cookies on our website.',
-    es: 'Política de cookies de Qwantix Agency. Información sobre el uso de cookies en nuestro sitio web.',
-    de: 'Cookie-Richtlinie von Qwantix Agency. Informationen über die Verwendung von Cookies auf unserer Website.',
-    ru: 'Политика использования файлов cookie Qwantix Agency. Информация об использовании файлов cookie на нашем веб-сайте.',
+    en: 'Cookie policy of Qwantix Agency, explaining what cookies we use, why we use them, and how you can manage or disable them in your browser while keeping key features available.',
+    es: 'Política de cookies de Qwantix Agency, donde explicamos qué cookies utilizamos, con qué finalidad y cómo puedes gestionarlas o desactivarlas en tu navegador sin perder funciones esenciales del sitio.',
+    de: 'Cookie‑Richtlinie von Qwantix Agency, die erklärt, welche Cookies wir einsetzen, zu welchen Zwecken und wie Sie diese in Ihrem Browser verwalten oder deaktivieren können, ohne wichtige Funktionen zu verlieren.',
+    ru: 'Политика использования файлов cookie Qwantix Agency с пояснениями, какие файлы cookie мы применяем, для каких целей и как вы можете управлять ими или отключать их в браузере, сохраняя основные функции сайта.',
   };
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';

@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
   
   const descriptions = {
-    en: 'Terms and conditions for using Qwantix Agency services and website.',
-    es: 'Términos y condiciones para el uso de los servicios y el sitio web de Qwantix Agency.',
-    de: 'Allgemeine Geschäftsbedingungen für die Nutzung der Dienste und der Website von Qwantix Agency.',
-    ru: 'Условия и положения использования услуг и веб-сайта Qwantix Agency.',
+    en: 'Key terms and conditions for using Qwantix Agency services and website, including service scope, intellectual property, user obligations, liability limits, and governing law.',
+    es: 'Términos y condiciones clave para el uso de los servicios y el sitio web de Qwantix Agency, incluyendo alcance del servicio, propiedad intelectual, obligaciones del usuario, limitación de responsabilidad y ley aplicable.',
+    de: 'Zentrale Geschäftsbedingungen für die Nutzung der Dienste und der Website von Qwantix Agency, einschließlich Leistungsumfang, geistigem Eigentum, Nutzerpflichten, Haftungsbeschränkung und geltendem Recht.',
+    ru: 'Основные условия использования услуг и веб‑сайта Qwantix Agency, включая объём услуг, права на контент, обязанности пользователя, ограничения ответственности и применимое законодательство.',
   };
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';

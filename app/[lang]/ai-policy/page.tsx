@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
   
   const descriptions = {
-    en: 'Transparency about how we use AI at Qwantix Agency. Our commitment to ethical AI and data privacy.',
-    es: 'Transparencia sobre cómo utilizamos la IA en Qwantix Agency. Nuestro compromiso con la IA ética y la privacidad de los datos.',
-    de: 'Transparenz darüber, wie wir KI bei Qwantix Agency einsetzen. Unser Engagement für ethische KI und Datenschutz.',
-    ru: 'Прозрачность использования ИИ в Qwantix Agency. Наши обязательства по этичному ИИ и защите данных.',
+    en: 'Transparent overview of how we use AI at Qwantix Agency, with a focus on human oversight, ethical standards, data privacy, and clear communication with clients about AI‑supported work.',
+    es: 'Visión transparente de cómo utilizamos la IA en Qwantix Agency, con énfasis en supervisión humana, estándares éticos, privacidad de datos y comunicación clara con los clientes sobre el trabajo asistido por IA.',
+    de: 'Transparenter Überblick darüber, wie wir KI bei Qwantix Agency einsetzen – mit Fokus auf menschliche Kontrolle, ethische Standards, Datenschutz und klare Kommunikation mit Kunden zu KI‑unterstützter Arbeit.',
+    ru: 'Прозрачное описание того, как мы используем ИИ в Qwantix Agency, с акцентом на человеческий контроль, этические стандарты, конфиденциальность данных и понятную коммуникацию с клиентами по ИИ‑поддерживаемым задачам.',
   };
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';

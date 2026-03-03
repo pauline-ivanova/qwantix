@@ -76,13 +76,33 @@ export function getMainPageUrls(): SitemapUrl[] {
   const urls: SitemapUrl[] = [];
 
   i18n.locales.forEach((lang) => {
-    const alternates: Record<string, string> = {};
+    // Home page alternates (root per language)
+    const homeAlternates: Record<string, string> = {};
     i18n.locales.forEach((altLang) => {
-      alternates[altLang] = `${baseUrl}/${altLang}`;
+      homeAlternates[altLang] = `${baseUrl}/${altLang}`;
     });
+    const homeAlternatesWithRegional = addRegionalAlternates(homeAlternates);
 
-    // Add regional variants for better regional SEO
-    const alternatesWithRegional = addRegionalAlternates(alternates);
+    // About page alternates (about per language)
+    const aboutAlternates: Record<string, string> = {};
+    i18n.locales.forEach((altLang) => {
+      aboutAlternates[altLang] = `${baseUrl}/${altLang}/about`;
+    });
+    const aboutAlternatesWithRegional = addRegionalAlternates(aboutAlternates);
+
+    // Blog listing alternates (blog per language)
+    const blogAlternates: Record<string, string> = {};
+    i18n.locales.forEach((altLang) => {
+      blogAlternates[altLang] = `${baseUrl}/${altLang}/blog`;
+    });
+    const blogAlternatesWithRegional = addRegionalAlternates(blogAlternates);
+
+    // Case studies listing alternates (case-studies per language)
+    const caseStudiesAlternates: Record<string, string> = {};
+    i18n.locales.forEach((altLang) => {
+      caseStudiesAlternates[altLang] = `${baseUrl}/${altLang}/case-studies`;
+    });
+    const caseStudiesAlternatesWithRegional = addRegionalAlternates(caseStudiesAlternates);
 
     // Home page
     urls.push({
@@ -91,7 +111,7 @@ export function getMainPageUrls(): SitemapUrl[] {
       changeFrequency: 'daily',
       priority: 1.0,
       alternates: {
-        languages: alternatesWithRegional,
+        languages: homeAlternatesWithRegional,
       },
     });
 
@@ -102,7 +122,7 @@ export function getMainPageUrls(): SitemapUrl[] {
       changeFrequency: 'monthly',
       priority: 0.7,
       alternates: {
-        languages: alternatesWithRegional,
+        languages: aboutAlternatesWithRegional,
       },
     });
 
@@ -113,7 +133,7 @@ export function getMainPageUrls(): SitemapUrl[] {
       changeFrequency: 'weekly',
       priority: 0.7,
       alternates: {
-        languages: alternatesWithRegional,
+        languages: blogAlternatesWithRegional,
       },
     });
 
@@ -124,7 +144,7 @@ export function getMainPageUrls(): SitemapUrl[] {
       changeFrequency: 'weekly',
       priority: 0.7,
       alternates: {
-        languages: alternatesWithRegional,
+        languages: caseStudiesAlternatesWithRegional,
       },
     });
   });
@@ -186,12 +206,12 @@ export function getServiceUrls(): SitemapUrl[] {
   });
 
   servicesBySlug.forEach((langs, slug) => {
-    // Get all languages for this service
-    const serviceLangs = langs.map((l) => l.lang);
-    
-    serviceLangs.forEach((lang) => {
+    // Generate URLs for all supported locales – even if content
+    // falls back to English in some languages, the routes exist
+    // and are indexable.
+    i18n.locales.forEach((lang) => {
       const alternates: Record<string, string> = {};
-      serviceLangs.forEach((altLang) => {
+      i18n.locales.forEach((altLang) => {
         alternates[altLang] = `${baseUrl}/${altLang}/services/${slug}`;
       });
 

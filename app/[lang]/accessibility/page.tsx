@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
   
   const descriptions = {
-    en: 'Our commitment to ensuring digital accessibility for people with disabilities.',
-    es: 'Nuestro compromiso para garantizar la accesibilidad digital de las personas con discapacidad.',
-    de: 'Unser Engagement für die Gewährleistung der digitalen Barrierefreiheit für Menschen mit Behinderungen.',
-    ru: 'Наше обязательство по обеспечению цифровой доступности для людей с ограниченными возможностями.',
+    en: 'Our commitment to ensuring digital accessibility for people with disabilities, with WCAG‑aligned improvements across navigation, content structure, and assistive technology support.',
+    es: 'Nuestro compromiso para garantizar la accesibilidad digital de las personas con discapacidad, alineando el sitio con WCAG y mejorando navegación, estructura de contenido y soporte a tecnologías de asistencia.',
+    de: 'Unser Engagement für die Gewährleistung digitaler Barrierefreiheit für Menschen mit Behinderungen – mit WCAG‑orientierten Verbesserungen bei Navigation, Inhaltsstruktur und Unterstützung von Hilfstechnologien.',
+    ru: 'Наше обязательство по обеспечению цифровой доступности для людей с ограниченными возможностями, с улучшениями по стандартам WCAG в навигации, структуре контента и поддержке вспомогательных технологий.',
   };
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.qwantix.agency';
